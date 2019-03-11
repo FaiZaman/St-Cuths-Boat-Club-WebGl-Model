@@ -113,10 +113,10 @@ function main() {
 function keydown(ev, gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
   switch (ev.code) {
     case 'ArrowUp': // Up arrow key -> the positive rotation of arm1 around the y-axis
-      g_xAngle = (g_xAngle + ANGLE_STEP) % 360;
+      g_xAngle = (g_xAngle - ANGLE_STEP) % 360;
       break;
     case 'ArrowDown': // Down arrow key -> the negative rotation of arm1 around the y-axis
-      g_xAngle = (g_xAngle - ANGLE_STEP) % 360;
+      g_xAngle = (g_xAngle + ANGLE_STEP) % 360;
       break;
     case 'ArrowRight': // Right arrow key -> the positive rotation of arm1 around the y-axis
       g_yAngle = (g_yAngle + ANGLE_STEP) % 360;
@@ -152,12 +152,12 @@ function initVertexBuffers(gl) {
 
 
   var colors = new Float32Array([    // Colors
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v1-v2-v3 front
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v3-v4-v5 right
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v6-v7-v2 left
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
+    1, 1, 1,   1, 1, 1,   1, 1, 1,  1, 1, 1,     // v0-v1-v2-v3 front
+   -1, 1, 1,   1, 1, 1,   -1, 1, 1,  -1, 1, 1,     // v0-v3-v4-v5 right
+    1, 1, 0,   1, 1, 0,   1, 1, 0,  1, 1, 0,     // v0-v5-v6-v1 up
+    1, 0, 1,   1, 0, 1,   1, 0, 1,  1, 0, 1,     // v1-v6-v7-v2 left
+    0, 1, 0,   0, 1, 0,   0, 1, 0,  0, 1, 0,     // v7-v4-v3-v2 down
+    1, 0, -1,   1, 0, -1,   1, 0, -1,  1, 0, -1　    // v4-v7-v6-v5 back
  ]);
 
 

@@ -39,24 +39,21 @@ var FSHADER_SOURCE =
 var modelMatrix = new Matrix4();
 var viewMatrix = new Matrix4();
 var projMatrix = new Matrix4();
-var g_normalMatrix = new Matrix4();  // Coordinate transformation matrix for normals
+var g_normalMatrix = new Matrix4();  // coordinate transformation matrix for normals
 
-var ANGLE_STEP = 3.0;  // angle rotation increment
-var g_xAngle = 0.0;
-var g_yAngle = 0.0;    // x and y rotation in degrees
+// movement speed and camera rotation
+var lookSpeed = 0.01;
+var sidesSpeed = 0.1;
+var hSpeed = 0.1;
+var vSpeed = 0.1;
 
-// Speed of Movement and rotation of the camera
-var verticalPanSpeed = 0.02;
-var horizontalSpeed = 0.1;
-var sideSpeed = 0.1;
-var verticalSpeed = 0.1;
-
-// Used in the callback function to determine pressed keys
+// keys for looking around
 var upKey = false;
 var downKey = false;
 var rightKey = false;
 var leftKey = false;
 
+// keys for moving camera physically around
 var wKey = false;
 var aKey = false;
 var sKey = false;
@@ -64,16 +61,17 @@ var dKey = false;
 var qKey = false;
 var eKey = false;
 
-// virtual camera specs
-var x_degree = 1; // used when camera is pointed between axis
-var z_degree = 1;
+// when camera pointing between axes
+var xAngle = 1;
+var zAngle = 1;
 
-var x_cord = 65;
-var y_cord = 10;
-var z_cord = 45;
-var y_look = 9.91;
+// coordinates for changing camera angles
+var xCoordinate = 65;
+var yCoordinate = 10;
+var zCoordinate = 45;
+var vLook = 9.91;
 
-var angle = 0.89 * Math.PI; // in Radians
+var angle = 0.9 * Math.PI; // radians for calculations
 
 function main() {
   var canvas = document.getElementById('webgl');
@@ -93,7 +91,7 @@ function main() {
   gl.enable(gl.DEPTH_TEST);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // Get uniform attributes' storage locations
+  // get uniform attributes' storage locations
   var u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
   var u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
   var u_NormalMatrix = gl.getUniformLocation(gl.program, 'u_NormalMatrix');
@@ -111,22 +109,20 @@ function main() {
     return;
   }
 
-  // Set light colour
+  // set light colour and direction in world coords
   gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
-  // Set light direction in the world coordinate
   var lightDirection = new Vector3([0.5, 3.0, 4.0]);
-  lightDirection.normalize();     // Normalize
+  lightDirection.normalize();
   gl.uniform3fv(u_LightDirection, lightDirection.elements);
 
-  // Calculate view + projection matrix
-  viewMatrix.setLookAt(0, 0, 15, 0, 0, -100, 0, 1, 0);
+  // calculate proj matrix
   projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
 
-  // Pass view and projection matrix to uniform matrix respectively
+  // pass view and proj matrix to uniform matrix respectively
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
 
-  var drawScene = function() {
+  var generateScene = function() {
     document.onkeydown = function (ev) {
       startKeydown(ev);
     };
@@ -134,55 +130,54 @@ function main() {
       startKeyUp(ev);
     };
     draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting);
-    requestAnimationFrame(drawScene);
+    requestAnimationFrame(generateScene);
   };
-  drawScene(); // call back function for virtual camera movement
+  generateScene();
 }
 
-function moveCamera() { // change this to use cases
+function move() { // moves around the scene
 
-  x_degree = Math.cos(angle) - Math.sin(angle);
-  z_degree = Math.cos(angle) + Math.sin(angle);
+  xAngle = Math.cos(angle) - Math.sin(angle);
+  zAngle = Math.cos(angle) + Math.sin(angle);
 
-  if (leftKey) { // spin left
-      angle = (angle - Math.PI / 180) % (2 * Math.PI);
+  if (leftKey) { // look left
+      angle = (angle - Math.PI/180) % (2 * Math.PI);
   }
-  if (rightKey) { // spin right
-      angle = (angle + Math.PI / 180) % (2 * Math.PI);
-  }
-
-  if (upKey) { // pan forwards
-      y_look -= verticalPanSpeed;
-  }
-  if (downKey) { // pan back
-      y_look += verticalPanSpeed;
+  if (rightKey) { // look right
+      angle = (angle + Math.PI/180) % (2 * Math.PI);
   }
 
-  if (wKey) { // forwards
-      z_cord += z_degree * horizontalSpeed;
-      x_cord += x_degree * horizontalSpeed;
+  if (upKey) { // look up
+      vLook += lookSpeed;
   }
-  if (sKey) { // move back
-      z_cord -= z_degree * horizontalSpeed;
-      x_cord -= x_degree * horizontalSpeed;
+  if (downKey) { // look down
+      vLook -= lookSpeed;
+  }
+
+  if (wKey) { // move forwards
+      zCoordinate += zAngle * hSpeed;
+      xCoordinate += xAngle * hSpeed;
   }
   if (aKey) { // move left
-      z_cord -= x_degree * sideSpeed;
-      x_cord += z_degree * sideSpeed;
+      zCoordinate -= xAngle * sidesSpeed;
+      xCoordinate += zAngle * sidesSpeed;
+  }
+  if (sKey) { // move back
+      zCoordinate -= zAngle * hSpeed;
+      xCoordinate -= xAngle * hSpeed;
   }
   if (dKey) { // move right
-      z_cord += x_degree * sideSpeed;
-      x_cord -= z_degree * sideSpeed;
+      zCoordinate += xAngle * sidesSpeed;
+      xCoordinate -= zAngle * sidesSpeed;
   }
   if (qKey) { // move up
-      y_cord += verticalSpeed;
-      y_look += verticalSpeed;
+      yCoordinate += vSpeed;
+      vLook += vSpeed;
   }
   if (eKey) { // move down
-      y_cord -= verticalSpeed;
-      y_look -= verticalSpeed;
+      yCoordinate -= vSpeed;
+      vLook -= vSpeed;
   }
-
 }
 
 function startKeydown(ev) {
@@ -202,14 +197,14 @@ function startKeydown(ev) {
     case 'KeyW':
         wKey = true;
         break;
-    case 'KeyD':
-        dKey = true;
+    case 'KeyA':
+        aKey = true;
         break;
     case 'KeyS':
         sKey = true;
         break;
-    case 'KeyA':
-        aKey = true;
+    case 'KeyD':
+        dKey = true;
         break;
     case 'KeyQ':
         qKey = true;
@@ -217,65 +212,7 @@ function startKeydown(ev) {
     case 'KeyE':
         eKey = true;
         break;
-
-    case 'KeyT':
-        if (tKey) {
-            tKey = false;
-        } else {
-            tKey = true;
-        }
-        break;
-    case 'KeyR':
-        if (rKey) {
-            rKey = false;
-        } else {
-            rKey = true;
-        }
-        break;
-    case 'KeyY':
-        if (yKey) {
-            yKey = false;
-        } else {
-            yKey = true;
-        }
-        break;
-
-    case 'Digit1':
-        if (oneKey) {
-            oneKey = false;
-        } else {
-            oneKey = true;
-        }
-        break;
-    case 'Digit2':
-        if (twoKey) {
-            twoKey = false;
-        } else {
-            twoKey = true;
-        }
-        break;
-    case 'Digit3':
-        if (threeKey) {
-            threeKey = false;
-        } else {
-            threeKey = true;
-        }
-        break;
-    case 'Digit4':
-        if (fourKey) {
-            fourKey = false;
-        } else {
-            fourKey = true;
-        }
-        break;
-    case 'Digit5':
-        if (fiveKey) {
-            fiveKey = false;
-        } else {
-            fiveKey = true;
-        }
-        break;
-      }
+  }
 }
 
 function startKeyUp(ev) {
@@ -392,11 +329,11 @@ function initPrismVertexBuffers(gl){
   ]);
 
   var colors = new Float32Array([ // colours, grey - 169, 169, 169
-    1.00, 0.00, 0.00,   1.00, 0.00, 0.00,   1.00, 0.00, 0.00,
-    0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,
-    0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,
-    0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,
-    1.00, 0.00, 0.00,   1.00, 0.00, 0.00,   1.00, 0.00, 0.00
+       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,
+    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
+    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
+    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
+       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,       1.00,    0.00,    0.00
   ]);
 
   var normals = new Float32Array([    // normal
@@ -522,8 +459,12 @@ function popMatrix() { // Retrieve the matrix from the array
 }
 
 function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
-  moveCamera();
-  viewMatrix.setLookAt(x_cord, y_cord, z_cord, x_cord + x_degree, y_look, z_cord + z_degree, 0, 1, 0);
+
+  // move if keys are pressed
+  move();
+
+  // set the view matrix and pass it into uniform variable
+  viewMatrix.setLookAt(xCoordinate, yCoordinate, zCoordinate, xCoordinate + xAngle, vLook, zCoordinate + zAngle, 0, 1, 0);
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -549,10 +490,6 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
     return;
   }
 
-  // rotate then translate to move the model
-  modelMatrix.rotate(g_yAngle, 0, 1, 0); // rotate along y
-  modelMatrix.rotate(g_xAngle, 1, 0, 0); // rotate along x
-
   // model the main building
   pushMatrix(modelMatrix);
     modelMatrix.translate(-1.0, 0.0, 0.0);
@@ -567,7 +504,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
-  // set vertex coords and colour for prism
+  // set vertex coords and colour for prism (roof)
   n = initPrismVertexBuffers(gl);
   if (n < 0) {
     console.log('Failed to set the vertex information');

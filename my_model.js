@@ -64,7 +64,7 @@ function main() {
   }
 
   // Set clear color and enable hidden surface removal
-  gl.clearColor(0.0, 0.0, 1.0, 1.0);
+  gl.clearColor(-1.0, 1.0, 1.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
   // Clear color and depth buffer
@@ -152,12 +152,12 @@ function initVertexBuffers(gl) {
 
 
   var colors = new Float32Array([    // Colors
-    1, 1, 1,   1, 1, 1,   1, 1, 1,  1, 1, 1,     // v0-v1-v2-v3 front
-   -1, 1, 1,   1, 1, 1,   -1, 1, 1,  -1, 1, 1,     // v0-v3-v4-v5 right
-    1, 1, 0,   1, 1, 0,   1, 1, 0,  1, 1, 0,     // v0-v5-v6-v1 up
-    1, 0, 1,   1, 0, 1,   1, 0, 1,  1, 0, 1,     // v1-v6-v7-v2 left
-    0, 1, 0,   0, 1, 0,   0, 1, 0,  0, 1, 0,     // v7-v4-v3-v2 down
-    1, 0, -1,   1, 0, -1,   1, 0, -1,  1, 0, -1　    // v4-v7-v6-v5 back
+    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v1-v2-v3 front
+    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v3-v4-v5 right
+    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
+    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v6-v7-v2 left
+    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
+    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
  ]);
 
 
@@ -321,16 +321,17 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
   modelMatrix.rotate(g_yAngle, 0, 1, 0); // Rotate along y axis
   modelMatrix.rotate(g_xAngle, 1, 0, 0); // Rotate along x axis
 
-  // Model the chair seat
+  // Model the main building
   pushMatrix(modelMatrix);
-    modelMatrix.scale(2.0, 0.5, 2.0); // Scale
+    modelMatrix.translate(-1.0, 0.0, 0.0);  // Translation
+    modelMatrix.scale(3.0, 1.5, 1.5); // Scale
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
-  // Model the chair back
+  // Model the side (tall) building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(0, 1.25, -0.75);  // Translation
-    modelMatrix.scale(2.0, 2.0, 0.5); // Scale
+    modelMatrix.translate(1.25, 0.5, 0.0);  // Translation
+    modelMatrix.scale(1.5, 2.5, 1.5); // Scale
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }

@@ -124,7 +124,6 @@ function keydown(ev, gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
   draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting);
 }
 
-
 function initCubeVertexBuffers(gl) {
   // Create a cube
   //    v6----- v5
@@ -134,7 +133,7 @@ function initCubeVertexBuffers(gl) {
   //  | |v7---|-|v4
   //  |/      |/
   //  v2------v3
-  var vertices = new Float32Array([   // Coordinates
+  var vertices = new Float32Array([   // coordinates
      0.5, 0.5, 0.5,  -0.5, 0.5, 0.5,  -0.5,-0.5, 0.5,   0.5,-0.5, 0.5, // v0-v1-v2-v3 front
      0.5, 0.5, 0.5,   0.5,-0.5, 0.5,   0.5,-0.5,-0.5,   0.5, 0.5,-0.5, // v0-v3-v4-v5 right
      0.5, 0.5, 0.5,   0.5, 0.5,-0.5,  -0.5, 0.5,-0.5,  -0.5, 0.5, 0.5, // v0-v5-v6-v1 up
@@ -144,7 +143,7 @@ function initCubeVertexBuffers(gl) {
   ]);
 
 
-  var colors = new Float32Array([    // Colors
+  var colors = new Float32Array([    // colors
     1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v1-v2-v3 front
     1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v3-v4-v5 right
     1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
@@ -154,7 +153,7 @@ function initCubeVertexBuffers(gl) {
  ]);
 
 
-  var normals = new Float32Array([    // Normal
+  var normals = new Float32Array([    // normal
     0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,  // v0-v1-v2-v3 front
     1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,  // v0-v3-v4-v5 right
     0.0, 1.0, 0.0,   0.0, 1.0, 0.0,   0.0, 1.0, 0.0,   0.0, 1.0, 0.0,  // v0-v5-v6-v1 up
@@ -174,7 +173,6 @@ function initCubeVertexBuffers(gl) {
     20,21,22,  20,22,23     // back
  ]);
 
-
   // Write the vertex property to buffers (coordinates, colors and normals)
   if (!initArrayBuffer(gl, 'a_Position', vertices, 3, gl.FLOAT)) return -1;
   if (!initArrayBuffer(gl, 'a_Color', colors, 3, gl.FLOAT)) return -1;
@@ -193,7 +191,44 @@ function initCubeVertexBuffers(gl) {
   return indices.length;
 }
 
-function initArrayBuffer (gl, attribute, data, num, type) {
+function initPrismVertexBuffers(gl){
+
+  // create a prism
+  var vertices = new Float32Array([ // coordinates
+    -0.5,-0.5, 0.5,   0.0, 0.5, 0.5,   0.5,-0.5, 0.5,                   // front
+     0.0, 0.5, 0.5,   0.5,-0.5, 0.5,   0.5,-0.5,-0.5,   0.0, 0.5,-0.5,  // right side
+    -0.5,-0.5, 0.5,   0.0, 0.5, 0.5,   0.0, 0.5,-0.5,  -0.5,-0.5,-0.5,  // left side
+    -0.5,-0.5, 0.5,   0.5,-0.5, 0.5,   0.5,-0.5,-0.5,  -0.5,-0.5,-0.5,  // bottom side
+    -0.5,-0.5,-0.5,   0.5,-0.5,-0.5,   0.0, 0.5,-0.5                    // back
+  ]);
+
+  var colors = new Float32Array([ // colours, grey - 169, 169, 169
+    1.00, 0.00, 0.00,   1.00, 0.00, 0.00,   1.00, 0.00, 0.00,
+    0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,
+    0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,
+    0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,   0.66, 0.66, 0.66,
+    1.00, 0.00, 0.00,   1.00, 0.00, 0.00,   1.00, 0.00, 0.00
+  ]);
+
+  var normals = new Float32Array([    // normal
+    0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,                   // front
+    1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,  // right
+   -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  -1.0, 0.0, 0.0,  // left
+    0.0,-1.0, 0.0,   0.0,-1.0, 0.0,   0.0,-1.0, 0.0,   0.0,-1.0, 0.0,  // down
+    0.0, 0.0,-1.0,   0.0, 0.0,-1.0,   0.0, 0.0,-1.0                    // back
+  ]);
+
+  var indices = new Uint8Array([
+    0, 1, 2,
+    1, 2, 3,   1, 3, 4,
+    5, 6, 7,   5, 7, 8,
+    9,10,11,  11,12,13,
+    14,15,16
+  ]);
+
+}
+
+function initArrayBuffer(gl, attribute, data, num, type) {
 
   // create buffer
   var buffer = gl.createBuffer();

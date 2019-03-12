@@ -1,5 +1,5 @@
-// Directional lighting demo: By Frederick Li
-// Vertex shader program
+// St Cuth's Boat Club
+
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
   'attribute vec4 a_Color;\n' +
@@ -27,7 +27,6 @@ var VSHADER_SOURCE =
   '  }\n' +
   '}\n';
 
-// Fragment shader program
 var FSHADER_SOURCE =
   '#ifdef GL_ES\n' +
   'precision mediump float;\n' +
@@ -37,40 +36,34 @@ var FSHADER_SOURCE =
   '  gl_FragColor = v_Color;\n' +
   '}\n';
 
-var modelMatrix = new Matrix4(); // The model matrix
-var viewMatrix = new Matrix4();  // The view matrix
-var projMatrix = new Matrix4();  // The projection matrix
+var modelMatrix = new Matrix4();
+var viewMatrix = new Matrix4();
+var projMatrix = new Matrix4();
 var g_normalMatrix = new Matrix4();  // Coordinate transformation matrix for normals
 
-var ANGLE_STEP = 3.0;  // The increments of rotation angle (degrees)
-var g_xAngle = 0.0;    // The rotation x angle (degrees)
-var g_yAngle = 0.0;    // The rotation y angle (degrees)
+var ANGLE_STEP = 3.0;  // angle rotation increment
+var g_xAngle = 0.0;
+var g_yAngle = 0.0;    // x and y rotation in degrees
 
 function main() {
-  // Retrieve <canvas> element
   var canvas = document.getElementById('webgl');
 
-  // Get the rendering context for WebGL
   var gl = getWebGLContext(canvas);
   if (!gl) {
     console.log('Failed to get the rendering context for WebGL');
     return;
   }
 
-  // Initialize shaders
   if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
     console.log('Failed to intialize shaders.');
     return;
   }
 
-  // Set clear color and enable hidden surface removal
   gl.clearColor(-1.0, 1.0, 1.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
-
-  // Clear color and depth buffer
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // Get the storage locations of uniform attributes
+  // Get uniform attributes' storage locations
   var u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
   var u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
   var u_NormalMatrix = gl.getUniformLocation(gl.program, 'u_NormalMatrix');
@@ -78,7 +71,7 @@ function main() {
   var u_LightColor = gl.getUniformLocation(gl.program, 'u_LightColor');
   var u_LightDirection = gl.getUniformLocation(gl.program, 'u_LightDirection');
 
-  // Trigger using lighting or not
+  // lighting or none
   var u_isLighting = gl.getUniformLocation(gl.program, 'u_isLighting');
 
   if (!u_ModelMatrix || !u_ViewMatrix || !u_NormalMatrix ||
@@ -88,17 +81,18 @@ function main() {
     return;
   }
 
-  // Set the light color (white)
+  // Set light colour
   gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
-  // Set the light direction (in the world coordinate)
+  // Set light direction in the world coordinate
   var lightDirection = new Vector3([0.5, 3.0, 4.0]);
   lightDirection.normalize();     // Normalize
   gl.uniform3fv(u_LightDirection, lightDirection.elements);
 
-  // Calculate the view matrix and the projection matrix
+  // Calculate view + projection matrix
   viewMatrix.setLookAt(0, 0, 15, 0, 0, -100, 0, 1, 0);
   projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
-  // Pass the model, view, and projection matrix to the uniform variable respectively
+
+  // Pass view and projection matrix to uniform matrix respectively
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
 
@@ -127,12 +121,11 @@ function keydown(ev, gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
     default: return; // Skip drawing at no effective action
   }
 
-  // Draw the scene
   draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting);
 }
 
 
-function initVertexBuffers(gl) {
+function initCubeVertexBuffers(gl) {
   // Create a cube
   //    v6----- v5
   //   /|      /|
@@ -201,25 +194,28 @@ function initVertexBuffers(gl) {
 }
 
 function initArrayBuffer (gl, attribute, data, num, type) {
-  // Create a buffer object
+
+  // create buffer
   var buffer = gl.createBuffer();
   if (!buffer) {
     console.log('Failed to create the buffer object');
     return false;
   }
-  // Write date into the buffer object
+
+  // bind buffer to target add date to buffer
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-  // Assign the buffer object to the attribute variable
+
+  // assign buffer to attribute variable
   var a_attribute = gl.getAttribLocation(gl.program, attribute);
   if (a_attribute < 0) {
     console.log('Failed to get the storage location of ' + attribute);
     return false;
   }
   gl.vertexAttribPointer(a_attribute, num, type, false, 0, 0);
-  // Enable the assignment of the buffer object to the attribute variable
-  gl.enableVertexAttribArray(a_attribute);
 
+  // Enable assignment of buffer to attribute and unbind it when done
+  gl.enableVertexAttribArray(a_attribute);
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
   return true;
@@ -238,37 +234,38 @@ function initAxesVertexBuffers(gl) {
   ]);
   var n = 6;
 
-  // Create a buffer object
+  // create buffer
   var vertexColorBuffer = gl.createBuffer();
   if (!vertexColorBuffer) {
     console.log('Failed to create the buffer object');
     return false;
   }
 
-  // Bind the buffer object to target
+  // bind buffer to target
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
 
   var FSIZE = verticesColors.BYTES_PER_ELEMENT;
-  //Get the storage location of a_Position, assign and enable buffer
+
+  // get storage location of a_Position
   var a_Position = gl.getAttribLocation(gl.program, 'a_Position');
   if (a_Position < 0) {
     console.log('Failed to get the storage location of a_Position');
     return -1;
   }
-  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
-  gl.enableVertexAttribArray(a_Position);  // Enable the assignment of the buffer object
 
-  // Get the storage location of a_Position, assign buffer and enable
+  // assign and enable buffer
+  gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+  gl.enableVertexAttribArray(a_Position);
+
+  // same as above but for a_Colour, and unbind at the end
   var a_Color = gl.getAttribLocation(gl.program, 'a_Color');
   if(a_Color < 0) {
     console.log('Failed to get the storage location of a_Color');
     return -1;
   }
   gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
-  gl.enableVertexAttribArray(a_Color);  // Enable the assignment of the buffer object
-
-  // Unbind the buffer object
+  gl.enableVertexAttribArray(a_Color);
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
   return n;
@@ -286,52 +283,44 @@ function popMatrix() { // Retrieve the matrix from the array
 
 function draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
 
-  // Clear color and depth buffer
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.uniform1i(u_isLighting, false); // no lighting
 
-  gl.uniform1i(u_isLighting, false); // Will not apply lighting
-
-  // Set the vertex coordinates and color (for the x, y axes)
-
+  // draw x and y axes; set and pass model matrix to uniform variable
   var n = initAxesVertexBuffers(gl);
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
   }
 
-  // Calculate the view matrix and the projection matrix
-  modelMatrix.setTranslate(0, 0, 0);  // No Translation
-  // Pass the model matrix to the uniform variable
+  modelMatrix.setTranslate(0, 0, 0);
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
-
-  // Draw x and y axes
   gl.drawArrays(gl.LINES, 0, n);
 
-  gl.uniform1i(u_isLighting, true); // Will apply lighting
+  gl.uniform1i(u_isLighting, true); // apply lighting
 
-  // Set the vertex coordinates and color (for the cube)
-  n = initVertexBuffers(gl);
+  // set vertex coords and colour for cube
+  n = initCubeVertexBuffers(gl);
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
   }
 
-  // Rotate, and then translate
-  modelMatrix.setTranslate(0, 0, 0);  // Translation (No translation is supported here)
-  modelMatrix.rotate(g_yAngle, 0, 1, 0); // Rotate along y axis
-  modelMatrix.rotate(g_xAngle, 1, 0, 0); // Rotate along x axis
+  // rotate then translate to move the model
+  modelMatrix.rotate(g_yAngle, 0, 1, 0); // rotate along y
+  modelMatrix.rotate(g_xAngle, 1, 0, 0); // rotate along x
 
-  // Model the main building
+  // model the main building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-1.0, 0.0, 0.0);  // Translation
-    modelMatrix.scale(3.0, 1.5, 1.5); // Scale
+    modelMatrix.translate(-1.0, 0.0, 0.0);
+    modelMatrix.scale(3.0, 1.5, 1.5);
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // Model the side (tall) building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(1.25, 0.5, 0.0);  // Translation
-    modelMatrix.scale(1.5, 2.5, 1.5); // Scale
+    modelMatrix.translate(1.25, 0.5, 0.0);
+    modelMatrix.scale(1.5, 2.5, 1.5);
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }
@@ -339,7 +328,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
 function drawbox(gl, u_ModelMatrix, u_NormalMatrix, n) {
   pushMatrix(modelMatrix);
 
-    // Pass the model matrix to the uniform variable
+    // pass model matrix to uniform variable
     gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
 
     // Calculate the normal transformation matrix and pass it to u_NormalMatrix
@@ -347,7 +336,7 @@ function drawbox(gl, u_ModelMatrix, u_NormalMatrix, n) {
     g_normalMatrix.transpose();
     gl.uniformMatrix4fv(u_NormalMatrix, false, g_normalMatrix.elements);
 
-    // Draw the cube
+    // draw cubes
     gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
 
   modelMatrix = popMatrix();

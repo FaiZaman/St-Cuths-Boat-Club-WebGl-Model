@@ -45,6 +45,36 @@ var ANGLE_STEP = 3.0;  // angle rotation increment
 var g_xAngle = 0.0;
 var g_yAngle = 0.0;    // x and y rotation in degrees
 
+// Speed of Movement and rotation of the camera
+var verticalPanSpeed = 0.02;
+var horizontalSpeed = 0.1;
+var sideSpeed = 0.1;
+var verticalSpeed = 0.1;
+
+// Used in the callback function to determine pressed keys
+var upKey = false;
+var downKey = false;
+var rightKey = false;
+var leftKey = false;
+
+var wKey = false;
+var aKey = false;
+var sKey = false;
+var dKey = false;
+var qKey = false;
+var eKey = false;
+
+// virtual camera specs
+var x_degree = 1; // used when camera is pointed between axis
+var z_degree = 1;
+
+var x_cord = 65;
+var y_cord = 10;
+var z_cord = 45;
+var y_look = 9.91;
+
+var angle = 0.89 * Math.PI; // in Radians
+
 function main() {
   var canvas = document.getElementById('webgl');
 
@@ -96,32 +126,191 @@ function main() {
   gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
 
-
-  document.onkeydown = function(ev){
-    keydown(ev, gl, u_ModelMatrix, u_NormalMatrix, u_isLighting);
+  var drawScene = function() {
+    document.onkeydown = function (ev) {
+      startKeydown(ev);
+    };
+    document.onkeyup = function (ev) {
+      startKeyUp(ev);
+    };
+    draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting);
+    requestAnimationFrame(drawScene);
   };
-
-  draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting);
+  drawScene(); // call back function for virtual camera movement
 }
 
-function keydown(ev, gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
-  switch (ev.code) {
-    case 'ArrowUp': // Up arrow key -> the positive rotation of arm1 around the y-axis
-      g_xAngle = (g_xAngle - ANGLE_STEP) % 360;
-      break;
-    case 'ArrowDown': // Down arrow key -> the negative rotation of arm1 around the y-axis
-      g_xAngle = (g_xAngle + ANGLE_STEP) % 360;
-      break;
-    case 'ArrowRight': // Right arrow key -> the positive rotation of arm1 around the y-axis
-      g_yAngle = (g_yAngle + ANGLE_STEP) % 360;
-      break;
-    case 'ArrowLeft': // Left arrow key -> the negative rotation of arm1 around the y-axis
-      g_yAngle = (g_yAngle - ANGLE_STEP) % 360;
-      break;
-    default: return; // Skip drawing at no effective action
+function moveCamera() { // change this to use cases
+
+  x_degree = Math.cos(angle) - Math.sin(angle);
+  z_degree = Math.cos(angle) + Math.sin(angle);
+
+  if (leftKey) { // spin left
+      angle = (angle - Math.PI / 180) % (2 * Math.PI);
+  }
+  if (rightKey) { // spin right
+      angle = (angle + Math.PI / 180) % (2 * Math.PI);
   }
 
-  draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting);
+  if (upKey) { // pan forwards
+      y_look -= verticalPanSpeed;
+  }
+  if (downKey) { // pan back
+      y_look += verticalPanSpeed;
+  }
+
+  if (wKey) { // forwards
+      z_cord += z_degree * horizontalSpeed;
+      x_cord += x_degree * horizontalSpeed;
+  }
+  if (sKey) { // move back
+      z_cord -= z_degree * horizontalSpeed;
+      x_cord -= x_degree * horizontalSpeed;
+  }
+  if (aKey) { // move left
+      z_cord -= x_degree * sideSpeed;
+      x_cord += z_degree * sideSpeed;
+  }
+  if (dKey) { // move right
+      z_cord += x_degree * sideSpeed;
+      x_cord -= z_degree * sideSpeed;
+  }
+  if (qKey) { // move up
+      y_cord += verticalSpeed;
+      y_look += verticalSpeed;
+  }
+  if (eKey) { // move down
+      y_cord -= verticalSpeed;
+      y_look -= verticalSpeed;
+  }
+
+}
+
+function startKeydown(ev) {
+  switch (ev.code) {
+    case 'ArrowUp':
+        upKey = true;
+        break;
+    case 'ArrowDown':
+        downKey = true;
+        break;
+    case 'ArrowRight':
+        rightKey = true;
+        break;
+    case 'ArrowLeft':
+        leftKey = true;
+        break;
+    case 'KeyW':
+        wKey = true;
+        break;
+    case 'KeyD':
+        dKey = true;
+        break;
+    case 'KeyS':
+        sKey = true;
+        break;
+    case 'KeyA':
+        aKey = true;
+        break;
+    case 'KeyQ':
+        qKey = true;
+        break;
+    case 'KeyE':
+        eKey = true;
+        break;
+
+    case 'KeyT':
+        if (tKey) {
+            tKey = false;
+        } else {
+            tKey = true;
+        }
+        break;
+    case 'KeyR':
+        if (rKey) {
+            rKey = false;
+        } else {
+            rKey = true;
+        }
+        break;
+    case 'KeyY':
+        if (yKey) {
+            yKey = false;
+        } else {
+            yKey = true;
+        }
+        break;
+
+    case 'Digit1':
+        if (oneKey) {
+            oneKey = false;
+        } else {
+            oneKey = true;
+        }
+        break;
+    case 'Digit2':
+        if (twoKey) {
+            twoKey = false;
+        } else {
+            twoKey = true;
+        }
+        break;
+    case 'Digit3':
+        if (threeKey) {
+            threeKey = false;
+        } else {
+            threeKey = true;
+        }
+        break;
+    case 'Digit4':
+        if (fourKey) {
+            fourKey = false;
+        } else {
+            fourKey = true;
+        }
+        break;
+    case 'Digit5':
+        if (fiveKey) {
+            fiveKey = false;
+        } else {
+            fiveKey = true;
+        }
+        break;
+      }
+}
+
+function startKeyUp(ev) {
+  switch (ev.code) {
+    case 'ArrowUp':
+        upKey = false;
+        break;
+    case 'ArrowDown':
+        downKey = false;
+        break;
+    case 'ArrowRight':
+        rightKey = false;
+        break;
+    case 'ArrowLeft':
+        leftKey = false;
+        break;
+    case 'KeyW':
+        wKey = false;
+        break;
+    case 'KeyD':
+        dKey = false;
+        break;
+    case 'KeyS':
+        sKey = false;
+        break;
+    case 'KeyA':
+        aKey = false;
+        break;
+    case 'KeyQ':
+        qKey = false;
+        break;
+    case 'KeyE':
+        eKey = false;
+        break;
+  }
 }
 
 function initCubeVertexBuffers(gl) {
@@ -332,7 +521,10 @@ function popMatrix() { // Retrieve the matrix from the array
   return g_matrixStack.pop();
 }
 
-function draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
+function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
+  moveCamera();
+  viewMatrix.setLookAt(x_cord, y_cord, z_cord, x_cord + x_degree, y_look, z_cord + z_degree, 0, 1, 0);
+  gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.uniform1i(u_isLighting, false); // no lighting

@@ -173,12 +173,12 @@ function initCubeVertexBuffers(gl) {
     20,21,22,  20,22,23     // back
  ]);
 
-  // Write the vertex property to buffers (coordinates, colors and normals)
+  // add the vertex properties (coordinates, colors and normals) to buffers
   if (!initArrayBuffer(gl, 'a_Position', vertices, 3, gl.FLOAT)) return -1;
   if (!initArrayBuffer(gl, 'a_Color', colors, 3, gl.FLOAT)) return -1;
   if (!initArrayBuffer(gl, 'a_Normal', normals, 3, gl.FLOAT)) return -1;
 
-  // Write the indices to the buffer object
+  // add indices to the buffer object
   var indexBuffer = gl.createBuffer();
   if (!indexBuffer) {
     console.log('Failed to create the buffer object');
@@ -199,7 +199,7 @@ function initPrismVertexBuffers(gl){
      0.0, 0.5, 0.5,   0.5,-0.5, 0.5,   0.5,-0.5,-0.5,   0.0, 0.5,-0.5,  // right side
     -0.5,-0.5, 0.5,   0.0, 0.5, 0.5,   0.0, 0.5,-0.5,  -0.5,-0.5,-0.5,  // left side
     -0.5,-0.5, 0.5,   0.5,-0.5, 0.5,   0.5,-0.5,-0.5,  -0.5,-0.5,-0.5,  // bottom side
-    -0.5,-0.5,-0.5,   0.5,-0.5,-0.5,   0.0, 0.5,-0.5                    // back
+    -0.5,-0.5,-0.5,   0.0, 0.5,-0.5,   0.5,-0.5,-0.5                    // back
   ]);
 
   var colors = new Float32Array([ // colours, grey - 169, 169, 169
@@ -220,12 +220,28 @@ function initPrismVertexBuffers(gl){
 
   var indices = new Uint8Array([
     0, 1, 2,
-    1, 2, 3,   1, 3, 4,
-    5, 6, 7,   5, 7, 8,
-    9,10,11,  11,12,13,
-    14,15,16
+    3, 4, 5,   3, 5, 6,
+    7, 8, 9,   7, 9,10,
+    11,12,13,  11,13,14,
+    15,16,17
   ]);
 
+  // add the vertex properties (coordinates, colors and normals) to buffers
+  if (!initArrayBuffer(gl, 'a_Position', vertices, 3, gl.FLOAT)) return -1;
+  if (!initArrayBuffer(gl, 'a_Color', colors, 3, gl.FLOAT)) return -1;
+  if (!initArrayBuffer(gl, 'a_Normal', normals, 3, gl.FLOAT)) return -1;
+
+  // add indices to the buffer object
+  var indexBuffer = gl.createBuffer();
+  if (!indexBuffer) {
+    console.log('Failed to create the buffer object');
+    return false;
+  }
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+  return indices.length;
 }
 
 function initArrayBuffer(gl, attribute, data, num, type) {
@@ -352,10 +368,24 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_isLighting) {
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
-  // Model the side (tall) building
+  // model the side (tall) building
   pushMatrix(modelMatrix);
     modelMatrix.translate(1.25, 0.5, 0.0);
     modelMatrix.scale(1.5, 2.5, 1.5);
+    drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // set vertex coords and colour for prism
+  n = initPrismVertexBuffers(gl);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  // model the roofs
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(1.0, -2.0, 0.0);
+    modelMatrix.scale(2.0, 1.5, 1.5);
     drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }

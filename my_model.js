@@ -48,30 +48,31 @@ var hSpeed = 0.1;
 var vSpeed = 0.1;
 
 // keys for looking around
-var upKey = false;
-var downKey = false;
-var rightKey = false;
-var leftKey = false;
+var key_Up = false;
+var key_Down = false;
+var keyRight = false;
+var keyLeft = false;
 
 // keys for moving camera physically around
-var wKey = false;
-var aKey = false;
-var sKey = false;
-var dKey = false;
-var qKey = false;
-var eKey = false;
+var keyW = false;
+var keyA = false;
+var keyS = false;
+var keyD = false;
+var keyQ = false;
+var keyE = false;
 
 // when camera pointing between axes
 var xAngle = 1;
 var zAngle = 1;
 
 // coordinates for changing camera angles
-var xCoordinate = 65;
+var xCoordinate = 30;
 var yCoordinate = 10;
-var zCoordinate = 45;
-var vLook = 9.91;
+var zCoordinate = 30;
+var vLook = 9.75;
 
-var angle = 0.9 * Math.PI; // radians for calculations
+var firstTime = true;
+var angle = Math.PI; // radians for calculations
 
 function main() {
   var canvas = document.getElementById('webgl');
@@ -124,10 +125,10 @@ function main() {
 
   var generateScene = function() {
     document.onkeydown = function (ev) {
-      startKeydown(ev);
+      keyDown(ev);
     };
     document.onkeyup = function (ev) {
-      startKeyUp(ev);
+      keyUp(ev);
     };
     draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting);
     requestAnimationFrame(generateScene);
@@ -135,118 +136,118 @@ function main() {
   generateScene();
 }
 
+function keyDown(ev) {
+  switch (ev.code) {
+    case 'ArrowUp':
+        key_Up = true;
+        break;
+    case 'ArrowDown':
+        key_Down = true;
+        break;
+    case 'ArrowRight':
+        keyRight = true;
+        break;
+    case 'ArrowLeft':
+        keyLeft = true;
+        break;
+    case 'KeyW':
+        keyW = true;
+        break;
+    case 'KeyA':
+        keyA = true;
+        break;
+    case 'KeyS':
+        keyS = true;
+        break;
+    case 'KeyD':
+        keyD = true;
+        break;
+    case 'KeyQ':
+        keyQ = true;
+        break;
+    case 'KeyE':
+        keyE = true;
+        break;
+  }
+}
+
+function keyUp(ev) {
+  switch (ev.code) {
+    case 'ArrowUp':
+        key_Up = false;
+        break;
+    case 'ArrowDown':
+        key_Down = false;
+        break;
+    case 'ArrowRight':
+        keyRight = false;
+        break;
+    case 'ArrowLeft':
+        keyLeft = false;
+        break;
+    case 'KeyW':
+        keyW = false;
+        break;
+    case 'KeyD':
+        keyD = false;
+        break;
+    case 'KeyS':
+        keyS = false;
+        break;
+    case 'KeyA':
+        keyA = false;
+        break;
+    case 'KeyQ':
+        keyQ = false;
+        break;
+    case 'KeyE':
+        keyE = false;
+        break;
+  }
+}
+
 function move() { // moves around the scene
 
   xAngle = Math.cos(angle) - Math.sin(angle);
   zAngle = Math.cos(angle) + Math.sin(angle);
 
-  if (leftKey) { // look left
+  if (keyLeft) { // look left
       angle = (angle - Math.PI/180) % (2 * Math.PI);
   }
-  if (rightKey) { // look right
+  if (keyRight) { // look right
       angle = (angle + Math.PI/180) % (2 * Math.PI);
   }
 
-  if (upKey) { // look up
+  if (key_Up) { // look up
       vLook += lookSpeed;
   }
-  if (downKey) { // look down
+  if (key_Down) { // look down
       vLook -= lookSpeed;
   }
 
-  if (wKey) { // move forwards
+  if (keyW) { // move forwards
       zCoordinate += zAngle * hSpeed;
       xCoordinate += xAngle * hSpeed;
   }
-  if (aKey) { // move left
+  if (keyA) { // move left
       zCoordinate -= xAngle * sidesSpeed;
       xCoordinate += zAngle * sidesSpeed;
   }
-  if (sKey) { // move back
+  if (keyS) { // move back
       zCoordinate -= zAngle * hSpeed;
       xCoordinate -= xAngle * hSpeed;
   }
-  if (dKey) { // move right
+  if (keyD) { // move right
       zCoordinate += xAngle * sidesSpeed;
       xCoordinate -= zAngle * sidesSpeed;
   }
-  if (qKey) { // move up
+  if (keyQ) { // move up
       yCoordinate += vSpeed;
       vLook += vSpeed;
   }
-  if (eKey) { // move down
+  if (keyE) { // move down
       yCoordinate -= vSpeed;
       vLook -= vSpeed;
-  }
-}
-
-function startKeydown(ev) {
-  switch (ev.code) {
-    case 'ArrowUp':
-        upKey = true;
-        break;
-    case 'ArrowDown':
-        downKey = true;
-        break;
-    case 'ArrowRight':
-        rightKey = true;
-        break;
-    case 'ArrowLeft':
-        leftKey = true;
-        break;
-    case 'KeyW':
-        wKey = true;
-        break;
-    case 'KeyA':
-        aKey = true;
-        break;
-    case 'KeyS':
-        sKey = true;
-        break;
-    case 'KeyD':
-        dKey = true;
-        break;
-    case 'KeyQ':
-        qKey = true;
-        break;
-    case 'KeyE':
-        eKey = true;
-        break;
-  }
-}
-
-function startKeyUp(ev) {
-  switch (ev.code) {
-    case 'ArrowUp':
-        upKey = false;
-        break;
-    case 'ArrowDown':
-        downKey = false;
-        break;
-    case 'ArrowRight':
-        rightKey = false;
-        break;
-    case 'ArrowLeft':
-        leftKey = false;
-        break;
-    case 'KeyW':
-        wKey = false;
-        break;
-    case 'KeyD':
-        dKey = false;
-        break;
-    case 'KeyS':
-        sKey = false;
-        break;
-    case 'KeyA':
-        aKey = false;
-        break;
-    case 'KeyQ':
-        qKey = false;
-        break;
-    case 'KeyE':
-        eKey = false;
-        break;
   }
 }
 

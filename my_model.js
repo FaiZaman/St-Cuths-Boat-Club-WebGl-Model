@@ -493,16 +493,16 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
 
   // model the main building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-1.0, 0.0, 0.0);
-    modelMatrix.scale(3.0, 1.5, 1.5);
-    drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix.translate(-1.5, 0.0, 0.0);
+    modelMatrix.scale(11.6, 4.0, 4.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // model the side (tall) building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(1.25, 0.5, 0.0);
-    modelMatrix.scale(1.5, 2.5, 1.5);
-    drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix.translate(6.3, 1.25, 0.0);
+    modelMatrix.scale(4.0, 6.5, 4.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // set vertex coords and colour for prism (roof)
@@ -512,15 +512,30 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
     return;
   }
 
-  // model the roofs
+  // model the main roof
   pushMatrix(modelMatrix);
-    modelMatrix.translate(1.0, -2.0, 0.0);
-    modelMatrix.scale(2.0, 1.5, 1.5);
-    drawbox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix.translate(-1.5, 3.5, 0.0);
+    modelMatrix.rotate(90, 0, 1, 0);
+    modelMatrix.scale(4.5, 3.0, 11.6);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the side roof
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(6.3, 5.7, 0.0);
+    modelMatrix.scale(4.5, 2.5, 4.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the front-small roof
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, 3.0, 1.8);
+    modelMatrix.scale(3.2, 2.0, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }
 
-function drawbox(gl, u_ModelMatrix, u_NormalMatrix, n) {
+function drawBox(gl, u_ModelMatrix, u_NormalMatrix, n) {
   pushMatrix(modelMatrix);
 
     // pass model matrix to uniform variable

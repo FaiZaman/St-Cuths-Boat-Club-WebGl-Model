@@ -252,7 +252,7 @@ function move() { // moves around the scene
 }
 
 function initCubeVertexBuffers(gl) {
-  // Create a cube
+  // create a cube
   //    v6----- v5
   //   /|      /|
   //  v1------v0|
@@ -490,6 +490,13 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix, u_isLighting) {
     console.log('Failed to set the vertex information');
     return;
   }
+
+  // model the ground
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, -2.0, 0.0);
+    modelMatrix.scale(50.0, 0.0, 50.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
 
   // model the main building
   pushMatrix(modelMatrix);

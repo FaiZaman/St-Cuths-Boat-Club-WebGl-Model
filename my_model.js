@@ -21,7 +21,8 @@ let VSHADER_SOURCE =
   '  float nDotL = max(dot(normal, u_LightDirection), 0.0);\n' + // cos theta
      // diffuse reflection colour
   '  vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
-  '  v_Color = vec4(diffuse, a_Color.a);\n' +
+  '  vec3 ambient = u_AmbientLight * a_Color.rgb;\n' +
+  '  v_Color = vec4(diffuse + ambient, a_Color.a);\n' +
   '}\n';
 
 let FSHADER_SOURCE =
@@ -100,19 +101,22 @@ function main(){
   let u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
   let u_LightColor = gl.getUniformLocation(gl.program, 'u_LightColor');
   let u_LightDirection = gl.getUniformLocation(gl.program, 'u_LightDirection');
+  let u_AmbientLight = gl.getUniformLocation(gl.program, 'u_AmbientLight');
 
-  // lighting or none
-
-  if (!u_ModelMatrix || !u_ViewMatrix || !u_NormalMatrix || !u_ProjMatrix || !u_LightColor || !u_LightDirection) {
-    console.log('Failed to get the storage locations of one or more of the matrices');
+  if (!u_ModelMatrix || !u_ViewMatrix || !u_NormalMatrix || !u_ProjMatrix ||
+     !u_LightColor || !u_LightDirection || !u_AmbientLight) {
+    console.log('Failed to get the storage locations of one or more of the uniform variables');
     return;
   }
 
-  // set light colour and direction in world coords
+  // set directional light colour and direction in world coords
   gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
   let lightDirection = new Vector3([0.5, 3.0, 4.0]);
   lightDirection.normalize();
   gl.uniform3fv(u_LightDirection, lightDirection.elements);
+
+  // set ambient light
+  gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
 
   // calculate proj matrix
   projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);

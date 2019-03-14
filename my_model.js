@@ -247,14 +247,24 @@ function initCubeVertexBuffers(gl, color) {
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
    ]);
   }
-  else if (color == "green"){
-    colors = new Float32Array([    // colors green
-      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v1-v2-v3 front
+  else if (color == "lightGreen"){
+    colors = new Float32Array([    // colors lightGreen
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v3-v4-v5 right
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v5-v6-v1 up
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v1-v6-v7-v2 left
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v7-v4-v3-v2 down
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,　    // v4-v7-v6-v5 back
+   ]);
+  }
+  else if (color == "darkGreen"){
+    colors = new Float32Array([    // colors dark green
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
    ]);
   }
   else if (color == "grey"){
@@ -465,7 +475,7 @@ function initAxesVertexBuffers(gl) {
 function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
 
   // changing the colour of the cube for the ground
-  let color = "green";
+  let color = "lightGreen";
   n = initCubeVertexBuffers(gl, color);
   if (n < 0) {
     console.log('Failed to set the vertex information');
@@ -551,6 +561,89 @@ function drawRoofs(gl, u_ModelMatrix, u_NormalMatrix){
   pushMatrix(modelMatrix);
     modelMatrix.translate(10.0, 3.0, 0.0);
     modelMatrix.scale(3.2, 2.0, 5.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
+function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // model the edges
+  color = "darkGreen";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  // main roof edge model
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(13.6, 3.4, 1.2);
+    modelMatrix.rotate(90, 0, 1, 0);
+    modelMatrix.rotate(50, 0, 0, 1);
+    modelMatrix.scale(3.75, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(13.6, 3.4, -1.2);
+    modelMatrix.rotate(90, 0, 1, 0);
+    modelMatrix.rotate(-50, 0, 0, 1);
+    modelMatrix.scale(3.9, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // side roof front edge model
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-4.5, 5.6, 2.5);
+    modelMatrix.rotate(40, 0, 0, 1);
+    modelMatrix.scale(3.75, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-1.6, 5.7, 2.5);
+    modelMatrix.rotate(-40, 0, 0, 1);
+    modelMatrix.scale(3.78, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // side roof back edge model
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-4.5, 5.6, -2.5);
+    modelMatrix.rotate(40, 0, 0, 1);
+    modelMatrix.scale(3.75, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-1.6, 5.7, -2.5);
+    modelMatrix.rotate(-40, 0, 0, 1);
+    modelMatrix.scale(3.78, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // small front roof model
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(10.7, 3.0, 2.5);
+    modelMatrix.rotate(-52, 0, 0, 1);
+    modelMatrix.scale(2.5, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(9.3, 3.0, 2.5);
+    modelMatrix.rotate(52, 0, 0, 1);
+    modelMatrix.scale(2.5, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // small back roof model
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(10.7, 3.0, -2.5);
+    modelMatrix.rotate(-52, 0, 0, 1);
+    modelMatrix.scale(2.5, 0.2, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(9.3, 3.0, -2.5);
+    modelMatrix.rotate(52, 0, 0, 1);
+    modelMatrix.scale(2.5, 0.2, 0.1);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }
@@ -768,6 +861,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawGround(gl, u_ModelMatrix, u_NormalMatrix);  // draws grass and roads
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
   drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
+  drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix); // draws the roof edges
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
 }

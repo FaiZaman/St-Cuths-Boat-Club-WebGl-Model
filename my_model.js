@@ -539,6 +539,51 @@ function drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix){
     modelMatrix.scale(2.5, 6.0, 1.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
+
+  // model the chimmeny
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(-6.0, 2.0, 0.0);
+
+  pushMatrix(modelMatrix);  // main chimmeny
+    modelMatrix.scale(1.0, 9.0, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);  // bigger pipe
+    modelMatrix.translate(0.0, 4.7, 0.25);
+    modelMatrix.scale(0.4, 0.5, 0.4);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);  // smaller pipe
+    modelMatrix.translate(0.0, 4.6, -0.25);
+    modelMatrix.scale(0.4, 0.3, 0.4);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  // model the black tops of chimmeny
+  color = "black";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(-6.0, 2.0, 0.0);
+
+  pushMatrix(modelMatrix);  // bigger pipe top
+    modelMatrix.translate(0.0, 4.95, 0.25);
+    modelMatrix.scale(0.2, 0.01, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);  // smaller pipe top
+    modelMatrix.translate(0.0, 4.75, -0.25);
+    modelMatrix.scale(0.2, 0.01, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  modelMatrix = popMatrix();
 }
 
 function drawRoofs(gl, u_ModelMatrix, u_NormalMatrix){

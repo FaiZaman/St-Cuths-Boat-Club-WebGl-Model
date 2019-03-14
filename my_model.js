@@ -527,14 +527,14 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   // model the main building
   pushMatrix(modelMatrix);
     modelMatrix.translate(6.3, 0.0, 0.0);
-    modelMatrix.scale(11.6, 4.0, 4.0);
+    modelMatrix.scale(14.0, 4.0, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // model the side (tall) building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-1.5, 1.25, 0.0);
-    modelMatrix.scale(4.0, 6.5, 4.5);
+    modelMatrix.translate(-3.0, 1.25, 0.0);
+    modelMatrix.scale(5.0, 7.0, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
@@ -549,21 +549,21 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   pushMatrix(modelMatrix);
     modelMatrix.translate(6.3, 3.5, 0.0);
     modelMatrix.rotate(90, 0, 1, 0);
-    modelMatrix.scale(4.5, 3.0, 11.6);
+    modelMatrix.scale(5.0, 3.0, 14.5);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // model the side roof
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-1.5, 5.7, 0.0);
-    modelMatrix.scale(4.5, 2.5, 4.5);
+    modelMatrix.translate(-3.0, 5.7, 0.0);
+    modelMatrix.scale(6.0, 2.5, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // model the front-small roof
   pushMatrix(modelMatrix);
-    modelMatrix.translate(8.0, 3.0, 0.0);
-    modelMatrix.scale(3.2, 2.0, 4.5);
+    modelMatrix.translate(10.0, 3.0, 0.0);
+    modelMatrix.scale(3.2, 2.0, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }

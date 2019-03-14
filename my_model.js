@@ -532,6 +532,13 @@ function drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix){
     modelMatrix.scale(5.0, 7.0, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
+
+  // model the back sticking out building
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, 0.5, -3.0);
+    modelMatrix.scale(2.5, 6.0, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
 }
 
 function drawRoofs(gl, u_ModelMatrix, u_NormalMatrix){

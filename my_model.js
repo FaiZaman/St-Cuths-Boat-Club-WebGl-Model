@@ -62,9 +62,9 @@ let xAngle = 1;
 let zAngle = 1;
 
 // coordinates for changing camera angles
-let xCoordinate = 45;
+let xCoordinate = -40;
 let yCoordinate = 10;
-let zCoordinate = 45;
+let zCoordinate = 40;
 let vLook = 9.75;
 
 // movement speed and camera rotation
@@ -74,7 +74,7 @@ let forwardBackwardSpeed = 0.15;
 let upDownSpeed = 0.15;
 
 // camera angle in radians for calculations
-let angle = 1.02 * Math.PI;
+let angle = 1.5 * Math.PI;
 
 function main(){
   let canvas = document.getElementById('webgl');
@@ -517,10 +517,17 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
     console.log('Failed to set the vertex information');
     return;
   }
-  // model the grass
+  // model the main grass
   pushMatrix(modelMatrix);
-    modelMatrix.translate(0.0, -2.0, -12.0);
+    modelMatrix.translate(2.5, -2.0, -12.0);
     modelMatrix.scale(50.0, 0.5, 50.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the edge grass
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(2.5, -2.0, 21.5);
+    modelMatrix.scale(50.0, 0.5, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
@@ -532,7 +539,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   }
   // model the road
   pushMatrix(modelMatrix);
-    modelMatrix.translate(0.0, -2.0, 16.0);
+    modelMatrix.translate(2.5, -2.0, 16.0);
     modelMatrix.scale(50.0, 0.5, 6.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();

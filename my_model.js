@@ -341,7 +341,7 @@ function initCubeVertexBuffers(gl, color) {
   return indices.length;
 }
 
-function initPrismVertexBuffers(gl){
+function initPrismVertexBuffers(gl, color){
 
   // create a prism
   let vertices = new Float32Array([ // coordinates
@@ -352,13 +352,25 @@ function initPrismVertexBuffers(gl){
     -0.5,-0.5,-0.5,   0.0, 0.5,-0.5,   0.5,-0.5,-0.5                    // back
   ]);
 
-  let colors = new Float32Array([ // colours, grey - 169, 169, 169
-       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,
-    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
-    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
-    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
-       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,       1.00,    0.00,    0.00
-  ]);
+  let colors = "";
+  if (color == "red"){
+    colors = new Float32Array([ // colours, grey - 169, 169, 169
+         1.00,    0.00,    0.00,       1.00,    0.00,    0.00,       1.00,    0.00,    0.00,
+      169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
+      169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
+      169/255, 169/255, 169/255,    169/255, 169/255, 169/255,    169/255, 169/255, 169/255,   169/255, 169/255, 169/255,
+         1.00,    0.00,    0.00,       1.00,    0.00,    0.00,       1.00,    0.00,    0.00
+    ]);
+  }
+  else if (color == "darkGreen"){
+    colors = new Float32Array([ // colours, grey - 169, 169, 169
+      0,100/255,0,   0,100/255,0,   0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,  0,100/255,0,
+      0,100/255,0,   0,100/255,0,   0,100/255,0,
+    ]);
+  }
 
   let normals = new Float32Array([    // normal
     0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,                   // front
@@ -588,7 +600,7 @@ function drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix){
 
 function drawRoofs(gl, u_ModelMatrix, u_NormalMatrix){
   // set vertex coords and colour for prism (roof)
-  n = initPrismVertexBuffers(gl);
+  n = initPrismVertexBuffers(gl, "red");
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
@@ -643,27 +655,39 @@ function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
-  n = initPrismVertexBuffers(gl);
+  n = initPrismVertexBuffers(gl, "darkGreen");
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
   }
 
   pushMatrix(modelMatrix);
-  modelMatrix.setTranslate(13.5, 3.0, 0.0);
-  modelMatrix.rotate(90, 0, 1, 0);
+  modelMatrix.setTranslate(13.5, 4.0, 0.0);
 
   pushMatrix(modelMatrix);
-    modelMatrix.scale(2.0, 2.0, 0.5);
+    modelMatrix.rotate(90, 0, 1, 0);
+    modelMatrix.scale(3.0, 2.0, 0.5);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
     modelMatrix = popMatrix();
-  modelMatrix = popMatrix();
 
   n = initCubeVertexBuffers(gl, "darkGreen");
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
   }
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.15, 0.0, 0.0);
+    modelMatrix.scale(0.15, 2.5, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.15, 1.3, 0.0);
+    modelMatrix.scale(0.05, 0.4, 0.05);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
 
   // side roof front edge model
   pushMatrix(modelMatrix);

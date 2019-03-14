@@ -643,6 +643,28 @@ function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
+  n = initPrismVertexBuffers(gl);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(13.5, 3.0, 0.0);
+  modelMatrix.rotate(90, 0, 1, 0);
+
+  pushMatrix(modelMatrix);
+    modelMatrix.scale(2.0, 2.0, 0.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  n = initCubeVertexBuffers(gl, "darkGreen");
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
   // side roof front edge model
   pushMatrix(modelMatrix);
     modelMatrix.translate(-4.5, 5.6, 2.5);

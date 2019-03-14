@@ -68,10 +68,10 @@ let zCoordinate = 40;
 let vLook = 9.75;
 
 // movement speed and camera rotation
-let lookSpeed = 0.01;
-let leftRightSpeed = 0.15;
-let forwardBackwardSpeed = 0.15;
-let upDownSpeed = 0.15;
+let lookSpeed = 0.02; // default 0.01
+let leftRightSpeed = 0.3;  // default 0.15
+let forwardBackwardSpeed = 0.3;   // default 0.15
+let upDownSpeed = 0.3; // default 0.15
 
 // camera angle in radians for calculations
 let angle = 1.5 * Math.PI;
@@ -518,7 +518,7 @@ function drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix){
 
   // model the side (tall) building
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, 1.25, 0.0);
+    modelMatrix.translate(-3.0, 1.26, 0.0);
     modelMatrix.scale(5.0, 7.0, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
@@ -580,8 +580,8 @@ function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
   }
 
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, -2.0, 11.5);
-    modelMatrix.scale(1.0, 4.0, 1.0);
+    modelMatrix.translate(-3.0, -1.0, 11.5);
+    modelMatrix.scale(1.0, 2.0, 1.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
@@ -603,11 +603,11 @@ function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
 function drawBenches(gl, u_ModelMatrix, u_NormalMatrix){
 
   // set local coordiantes
-  modelMatrix.setTranslate(6.0, -0.75, 3.0);
   pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(6.0, -0.75, 6.0);
 
-  // model table and seats
-  color = "brown";
+  // model place for bin
+  color = "grey";
   n = initCubeVertexBuffers(gl, color);
   if (n < 0) {
     console.log('Failed to set the vertex information');
@@ -615,10 +615,79 @@ function drawBenches(gl, u_ModelMatrix, u_NormalMatrix){
   }
 
   pushMatrix(modelMatrix);
-    modelMatrix.translate(0.0, 0.0, 0.0);
+    modelMatrix.translate(0.0, -1.0, 0.0);
+    modelMatrix.scale(4.0, 0.1, 4.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model table, seats, and supports
+  color = "brown";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  // model the table
+  pushMatrix(modelMatrix);
     modelMatrix.scale(3.0, 0.2, 2.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  popMatrix();
+    modelMatrix = popMatrix();
+
+  // model the chairs
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, -0.5, 1.8);
+    modelMatrix.scale(3.0, 0.2, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, -0.5, -1.8);
+    modelMatrix.scale(3.0, 0.2, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  // model the supports
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.8, -0.7, 0.0);
+    modelMatrix.scale(0.1, 0.2, 4.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.8, -0.7, 0.0);
+    modelMatrix.scale(0.1, 0.2, 4.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.7, -0.65, 1.2);
+    modelMatrix.rotate(40, 1, 0, 0);
+    modelMatrix.scale(0.1, 0.2, 2.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.7, -0.65, 1.2);
+    modelMatrix.rotate(40, 1, 0, 0);
+    modelMatrix.scale(0.1, 0.2, 2.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.7, -0.65, -1.2);
+    modelMatrix.rotate(-40, 1, 0, 0);
+    modelMatrix.scale(0.1, 0.2, 2.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.7, -0.65, -1.2);
+    modelMatrix.rotate(-40, 1, 0, 0);
+    modelMatrix.scale(0.1, 0.2, 2.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  modelMatrix = popMatrix();
 }
 
 let g_matrixStack = []; // array for storing a matrix

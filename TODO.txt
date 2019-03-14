@@ -2,7 +2,6 @@ TODO - Graphics
 
 Add more models
 	- benches
-	- bin
 	- lamppost
 	- building details
 	- tree

@@ -247,8 +247,8 @@ function initCubeVertexBuffers(gl, color) {
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
    ]);
   }
-  if (color == "green"){
-    colors = new Float32Array([    // colors
+  else if (color == "green"){
+    colors = new Float32Array([    // colors green
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v1-v2-v3 front
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v3-v4-v5 right
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v5-v6-v1 up
@@ -257,13 +257,31 @@ function initCubeVertexBuffers(gl, color) {
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,　    // v4-v7-v6-v5 back
    ]);
   }
-  if (color == "grey"){
-    colors = new Float32Array([ // colours, grey - 169, 169, 169
+  else if (color == "grey"){
+    colors = new Float32Array([ // colours grey
       128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
       128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
       128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
       128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
       128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
+    ]);
+  }
+  else if (color == "lightBlack"){
+    colors = new Float32Array([ // colours light black
+      50/255,40/255,40/255,    50/255,40/255,40/255,    50/255,40/255,40/255,   50/255,40/255,40/255,
+      50/255,40/255,40/255,    50/255,40/255,40/255,    50/255,40/255,40/255,   50/255,40/255,40/255,
+      50/255,40/255,40/255,    50/255,40/255,40/255,    50/255,40/255,40/255,   50/255,40/255,40/255,
+      50/255,40/255,40/255,    50/255,40/255,40/255,    50/255,40/255,40/255,   50/255,40/255,40/255,
+      50/255,40/255,40/255,    50/255,40/255,40/255,    50/255,40/255,40/255,   50/255,40/255,40/255,
+    ]);
+  }
+  else if (color == "black"){
+    colors = new Float32Array([ // colours light black
+      25/255,25/255,25/255,    25/255,25/255,25/255,    25/255,25/255,25/255,   25/255,25/255,25/255,
+      25/255,25/255,25/255,    25/255,25/255,25/255,    25/255,25/255,25/255,   25/255,25/255,25/255,
+      25/255,25/255,25/255,    25/255,25/255,25/255,    25/255,25/255,25/255,   25/255,25/255,25/255,
+      25/255,25/255,25/255,    25/255,25/255,25/255,    25/255,25/255,25/255,   25/255,25/255,25/255,
+      25/255,25/255,25/255,    25/255,25/255,25/255,    25/255,25/255,25/255,   25/255,25/255,25/255,
     ]);
   }
 
@@ -436,6 +454,7 @@ function initAxesVertexBuffers(gl) {
 }
 
 function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
+
   // changing the colour of the cube for the ground
   let color = "green";
   n = initCubeVertexBuffers(gl, color);
@@ -443,6 +462,7 @@ function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
     console.log('Failed to set the vertex information');
     return;
   }
+
   // model the main grass
   pushMatrix(modelMatrix);
     modelMatrix.translate(2.5, -2.0, -12.0);
@@ -526,6 +546,51 @@ function drawRoofs(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
+function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // model place for bin
+  color = "grey";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, -1.99, 11.5);
+    modelMatrix.scale(3.0, 0.5, 3.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model actual bin
+  color = "lightBlack";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, -2.0, 11.5);
+    modelMatrix.scale(1.0, 4.0, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model bin hole
+  color = "black";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, -0.5, 12.01);
+    modelMatrix.scale(0.5, 0.5, 0.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
 let g_matrixStack = []; // Array for storing a matrix
 function pushMatrix(m) { // Store the specified matrix to the array
   let m2 = new Matrix4(m);
@@ -604,6 +669,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawGround(gl, u_ModelMatrix, u_NormalMatrix);  // draws grass and roads
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
   drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
+  drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
 }
 
 

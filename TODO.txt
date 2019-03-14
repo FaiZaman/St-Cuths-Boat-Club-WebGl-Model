@@ -1,0 +1,6 @@
+TODO - Graphics
+
+Rotate the thing round
+Add textures
+Add more models
+

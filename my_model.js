@@ -48,8 +48,8 @@ let keyS = false;
 let keyD = false;
 
 // move up and down (y axix)
-let keyQ = false;
-let keyE = false;
+let keyShiftLeft = false;
+let keySpace = false;
 
 // keys for looking around
 let key_Up = false;
@@ -116,7 +116,7 @@ function main(){
   gl.uniform3fv(u_LightDirection, lightDirection.elements);
 
   // set ambient light
-  gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
+  gl.uniform3f(u_AmbientLight, 0.5, 0.5, 0.5);
 
   // calculate proj matrix
   projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
@@ -156,11 +156,11 @@ function keyDown(ev){
         keyD = true;
         break;
 
-    case 'KeyQ':
-        keyQ = true;
+    case 'ShiftLeft':
+        keyShiftLeft = true;
         break;
-    case 'KeyE':
-        keyE = true;
+    case 'Space':
+        keySpace = true;
         break;
 
     // looking
@@ -209,16 +209,16 @@ function keyUp(ev){
         keyRight = false;
         break;
 
-    case 'KeyQ':
-        keyQ = false;
+    case 'ShiftLeft':
+        keyShiftLeft = false;
         break;
-    case 'KeyE':
-        keyE = false;
+    case 'Space':
+        keySpace = false;
         break;
   }
 }
 
-function initCubeVertexBuffers(gl) {
+function initCubeVertexBuffers(gl, color) {
   // create a cube
   //    v6----- v5
   //   /|      /|
@@ -236,16 +236,27 @@ function initCubeVertexBuffers(gl) {
      0.5,-0.5,-0.5,  -0.5,-0.5,-0.5,  -0.5, 0.5,-0.5,   0.5, 0.5,-0.5  // v4-v7-v6-v5 back
   ]);
 
-
-  let colors = new Float32Array([    // colors
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v1-v2-v3 front
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v3-v4-v5 right
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v6-v7-v2 left
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
-    1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
- ]);
-
+  let colors = [];
+  if (color[0] == 1){
+    colors = new Float32Array([    // colors
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v1-v2-v3 front
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v3-v4-v5 right
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v5-v6-v1 up
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v6-v7-v2 left
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
+      1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
+   ]);
+  }
+  if (color[2] == 1){
+    colors = new Float32Array([    // colors
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v1-v2-v3 front
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v3-v4-v5 right
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v5-v6-v1 up
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v1-v6-v7-v2 left
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v7-v4-v3-v2 down
+      124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,　    // v4-v7-v6-v5 back
+   ]);
+  }
 
   let normals = new Float32Array([    // normal
     0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,  // v0-v1-v2-v3 front
@@ -256,8 +267,7 @@ function initCubeVertexBuffers(gl) {
     0.0, 0.0,-1.0,   0.0, 0.0,-1.0,   0.0, 0.0,-1.0,   0.0, 0.0,-1.0   // v4-v7-v6-v5 back
   ]);
 
-
-  // Indices of the vertices
+  // vertex indices
   let indices = new Uint8Array([
      0, 1, 2,   0, 2, 3,    // front
      4, 5, 6,   4, 6, 7,    // right
@@ -450,14 +460,14 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
       xCoordinate -= zAngle * leftRightSpeed;
   }
 
-  // move up and down respectively
-  if (keyQ) {
-      yCoordinate += upDownSpeed;
-      vLook += upDownSpeed;
-  }
-  if (keyE) {
+  // move down and up respectively
+  if (keyShiftLeft) {
       yCoordinate -= upDownSpeed;
       vLook -= upDownSpeed;
+  }
+  if (keySpace) {
+      yCoordinate += upDownSpeed;
+      vLook += upDownSpeed;
   }
 
   // look up, down, left, right, respectively
@@ -491,8 +501,9 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
   gl.drawArrays(gl.LINES, 0, n);
 
-  // set vertex coords and colour for cube
-  n = initCubeVertexBuffers(gl);
+  // changing the colour of the cube for the ground
+  let color = [0, 0, 1];
+  n = initCubeVertexBuffers(gl, color);
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
@@ -501,9 +512,17 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   // model the ground
   pushMatrix(modelMatrix);
     modelMatrix.translate(0.0, -2.0, 0.0);
-    modelMatrix.scale(50.0, 0.0, 50.0);
+    modelMatrix.scale(50.0, 0.5, 50.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
+
+  // set vertex coords and colour for cube
+  color = [1, 0, 0];
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
 
   // model the main building
   pushMatrix(modelMatrix);

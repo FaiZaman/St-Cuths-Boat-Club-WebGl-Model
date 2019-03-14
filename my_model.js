@@ -62,9 +62,9 @@ let xAngle = 1;
 let zAngle = 1;
 
 // coordinates for changing camera angles
-let xCoordinate = 50;
+let xCoordinate = 45;
 let yCoordinate = 10;
-let zCoordinate = 50;
+let zCoordinate = 45;
 let vLook = 9.75;
 
 // movement speed and camera rotation
@@ -236,8 +236,8 @@ function initCubeVertexBuffers(gl, color) {
      0.5,-0.5,-0.5,  -0.5,-0.5,-0.5,  -0.5, 0.5,-0.5,   0.5, 0.5,-0.5  // v4-v7-v6-v5 back
   ]);
 
-  let colors = [];
-  if (color[0] == 1){
+  let colors = "";
+  if (color == "red"){
     colors = new Float32Array([    // colors
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v1-v2-v3 front
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v0-v3-v4-v5 right
@@ -247,7 +247,7 @@ function initCubeVertexBuffers(gl, color) {
       1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
    ]);
   }
-  if (color[2] == 1){
+  if (color == "green"){
     colors = new Float32Array([    // colors
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v1-v2-v3 front
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v0-v3-v4-v5 right
@@ -256,6 +256,15 @@ function initCubeVertexBuffers(gl, color) {
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,     // v7-v4-v3-v2 down
       124/255,252/255,0,   124/255,252/255,0,   124/255,252/255,0,  124/255,252/255,0,　    // v4-v7-v6-v5 back
    ]);
+  }
+  if (color == "grey"){
+    colors = new Float32Array([ // colours, grey - 169, 169, 169
+      128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
+      128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
+      128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
+      128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
+      128/255, 128/255, 128/255,    128/255, 128/255, 128/255,    128/255, 128/255, 128/255,   128/255, 128/255, 128/255,
+    ]);
   }
 
   let normals = new Float32Array([    // normal
@@ -502,22 +511,34 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   gl.drawArrays(gl.LINES, 0, n);
 
   // changing the colour of the cube for the ground
-  let color = [0, 0, 1];
+  let color = "green";
   n = initCubeVertexBuffers(gl, color);
   if (n < 0) {
     console.log('Failed to set the vertex information');
     return;
   }
-
-  // model the ground
+  // model the grass
   pushMatrix(modelMatrix);
-    modelMatrix.translate(0.0, -2.0, 0.0);
+    modelMatrix.translate(0.0, -2.0, -12.0);
     modelMatrix.scale(50.0, 0.5, 50.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
+  color = "grey";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0){
+    console.log('Failed to set the vertex information');
+    return;
+  }
+  // model the road
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, -2.0, 16.0);
+    modelMatrix.scale(50.0, 0.5, 6.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
   // set vertex coords and colour for cube
-  color = [1, 0, 0];
+  color = "red";
   n = initCubeVertexBuffers(gl, color);
   if (n < 0) {
     console.log('Failed to set the vertex information');

@@ -435,6 +435,97 @@ function initAxesVertexBuffers(gl) {
   return n;
 }
 
+function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
+  // changing the colour of the cube for the ground
+  let color = "green";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+  // model the main grass
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(2.5, -2.0, -12.0);
+    modelMatrix.scale(50.0, 0.5, 50.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the edge grass
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(2.5, -2.0, 21.5);
+    modelMatrix.scale(50.0, 0.5, 5.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  color = "grey";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0){
+    console.log('Failed to set the vertex information');
+    return;
+  }
+  // model the road
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(2.5, -2.0, 16.0);
+    modelMatrix.scale(50.0, 0.5, 6.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
+function drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix){
+  // set vertex coords and colour for cube
+  color = "red";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  // model the main building
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(6.3, 0.0, 0.0);
+    modelMatrix.scale(14.0, 4.0, 5.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the side (tall) building
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, 1.25, 0.0);
+    modelMatrix.scale(5.0, 7.0, 5.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
+function drawRoofs(gl, u_ModelMatrix, u_NormalMatrix){
+  // set vertex coords and colour for prism (roof)
+  n = initPrismVertexBuffers(gl);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  // model the main roof
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(6.3, 3.5, 0.0);
+    modelMatrix.rotate(90, 0, 1, 0);
+    modelMatrix.scale(5.0, 3.0, 14.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the side roof
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-3.0, 5.7, 0.0);
+    modelMatrix.scale(6.0, 2.5, 5.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the front-small roof
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(10.0, 3.0, 0.0);
+    modelMatrix.scale(3.2, 2.0, 5.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
 let g_matrixStack = []; // Array for storing a matrix
 function pushMatrix(m) { // Store the specified matrix to the array
   let m2 = new Matrix4(m);
@@ -510,91 +601,11 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
   gl.drawArrays(gl.LINES, 0, n);
 
-  // changing the colour of the cube for the ground
-  let color = "green";
-  n = initCubeVertexBuffers(gl, color);
-  if (n < 0) {
-    console.log('Failed to set the vertex information');
-    return;
-  }
-  // model the main grass
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(2.5, -2.0, -12.0);
-    modelMatrix.scale(50.0, 0.5, 50.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  // model the edge grass
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(2.5, -2.0, 21.5);
-    modelMatrix.scale(50.0, 0.5, 5.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  color = "grey";
-  n = initCubeVertexBuffers(gl, color);
-  if (n < 0){
-    console.log('Failed to set the vertex information');
-    return;
-  }
-  // model the road
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(2.5, -2.0, 16.0);
-    modelMatrix.scale(50.0, 0.5, 6.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  // set vertex coords and colour for cube
-  color = "red";
-  n = initCubeVertexBuffers(gl, color);
-  if (n < 0) {
-    console.log('Failed to set the vertex information');
-    return;
-  }
-
-  // model the main building
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(6.3, 0.0, 0.0);
-    modelMatrix.scale(14.0, 4.0, 5.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  // model the side (tall) building
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, 1.25, 0.0);
-    modelMatrix.scale(5.0, 7.0, 5.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  // set vertex coords and colour for prism (roof)
-  n = initPrismVertexBuffers(gl);
-  if (n < 0) {
-    console.log('Failed to set the vertex information');
-    return;
-  }
-
-  // model the main roof
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(6.3, 3.5, 0.0);
-    modelMatrix.rotate(90, 0, 1, 0);
-    modelMatrix.scale(5.0, 3.0, 14.5);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  // model the side roof
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, 5.7, 0.0);
-    modelMatrix.scale(6.0, 2.5, 5.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
-
-  // model the front-small roof
-  pushMatrix(modelMatrix);
-    modelMatrix.translate(10.0, 3.0, 0.0);
-    modelMatrix.scale(3.2, 2.0, 5.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
+  drawGround(gl, u_ModelMatrix, u_NormalMatrix);  // draws grass and roads
+  drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
+  drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
 }
+
 
 function drawBox(gl, u_ModelMatrix, u_NormalMatrix, n) {
   pushMatrix(modelMatrix);

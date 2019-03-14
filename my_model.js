@@ -284,6 +284,15 @@ function initCubeVertexBuffers(gl, color) {
       25/255,25/255,25/255,    25/255,25/255,25/255,    25/255,25/255,25/255,   25/255,25/255,25/255,
     ]);
   }
+  else if (color == "brown"){
+    colors = new Float32Array([ // colours light black
+      210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
+      210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
+      210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
+      210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
+      210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
+    ]);
+  }
 
   let normals = new Float32Array([    // normal
     0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,  // v0-v1-v2-v3 front
@@ -591,7 +600,28 @@ function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
-let g_matrixStack = []; // Array for storing a matrix
+function drawBenches(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // set local coordiantes
+  modelMatrix.setTranslate(6.0, -0.75, 3.0);
+  pushMatrix(modelMatrix);
+
+  // model table and seats
+  color = "brown";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, 0.0, 0.0);
+    modelMatrix.scale(3.0, 0.2, 2.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  popMatrix();
+}
+
+let g_matrixStack = []; // array for storing a matrix
 function pushMatrix(m) { // Store the specified matrix to the array
   let m2 = new Matrix4(m);
   g_matrixStack.push(m2);
@@ -670,6 +700,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
   drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
+  drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
 }
 
 

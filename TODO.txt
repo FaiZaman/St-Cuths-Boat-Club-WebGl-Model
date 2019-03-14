@@ -1,7 +1,7 @@
 TODO - Graphics
 
 Add more models
-	- benches
+	- benches!! - make off of chair js
 	- lamppost
 	- building details
 	- tree

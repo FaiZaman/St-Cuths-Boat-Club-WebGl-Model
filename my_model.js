@@ -514,15 +514,15 @@ function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
 
   // model the main grass
   pushMatrix(modelMatrix);
-    modelMatrix.translate(2.5, -2.0, -12.0);
-    modelMatrix.scale(50.0, 0.5, 50.0);
+    modelMatrix.translate(2.5, -2.0, -2.0);
+    modelMatrix.scale(50.0, 0.5, 28.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
   // model the edge grass
   pushMatrix(modelMatrix);
-    modelMatrix.translate(2.5, -2.0, 21.5);
-    modelMatrix.scale(50.0, 0.5, 5.0);
+    modelMatrix.translate(2.5, -2.0, 20.0);
+    modelMatrix.scale(50.0, 0.5, 4.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 
@@ -534,7 +534,7 @@ function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
   }
   // model the road
   pushMatrix(modelMatrix);
-    modelMatrix.translate(2.5, -2.0, 16.0);
+    modelMatrix.translate(2.5, -2.0, 15.0);
     modelMatrix.scale(50.0, 0.5, 6.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
@@ -764,7 +764,7 @@ function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
-function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, translateZ, rotateAngle, rotateX, rotateY, rotateZ, n){
+function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, translateZ, rotateAngle, rotateX, rotateY, rotateZ){
 
   color = "lightWhite";
   n = initCubeVertexBuffers(gl, color);
@@ -841,14 +841,14 @@ function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, t
 
 function drawWindows(gl, u_ModelMatrix, u_NormalMatrix){
 
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 10.0, 0.5, 2.5, 0, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 3.5, 0.5, 2.5, 0, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 0.5, 2.5, 0, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 3.5, 2.5, 0, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 10.0, 0.5, -2.5, 180, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 3.5, 0.5, -2.5, 180, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, -0.5, -3.5, 180, 0, 1, 0, n);
-  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 2.0, -3.5, 180, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 10.0, 0.5, 2.5, 0, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 3.5, 0.5, 2.5, 0, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 0.5, 2.5, 0, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 3.5, 2.5, 0, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 10.0, 0.5, -2.5, 180, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 3.5, 0.5, -2.5, 180, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, -0.5, -3.5, 180, 0, 1, 0);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 2.0, -3.5, 180, 0, 1, 0);
 }
 
 function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
@@ -1012,7 +1012,7 @@ function drawLampPost(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
-function drawFence(gl, u_ModelMatrix, u_NormalMatrix){
+function drawFence(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, translateZ, rotateAngle, rotateX, rotateY, rotateZ){
 
   // model the beams
   color = "brown";
@@ -1023,10 +1023,12 @@ function drawFence(gl, u_ModelMatrix, u_NormalMatrix){
   }
 
   pushMatrix(modelMatrix);
-  modelMatrix.setTranslate(-15.0, 0.0, 2.4);
+  modelMatrix.setTranslate(translateX, translateY, translateZ);
+  modelMatrix.rotate(rotateAngle, rotateX, rotateY, rotateZ);
 
   pushMatrix(modelMatrix);
-    modelMatrix.scale(15.0, 0.2, 0.2);
+    modelMatrix.translate(-0.75, 0.0, 0.0);
+    modelMatrix.scale(13.5, 0.2, 0.2);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
     modelMatrix = popMatrix();
 
@@ -1079,6 +1081,12 @@ function drawFence(gl, u_ModelMatrix, u_NormalMatrix){
     modelMatrix = popMatrix();
 
   modelMatrix = popMatrix();
+}
+
+function drawFences(gl, u_ModelMatrix, u_NormalMatrix){
+
+  drawFence(gl, u_ModelMatrix, u_NormalMatrix, -15.0, 0.0, 2.4, 0, 0, 1, 0);
+  drawFence(gl, u_ModelMatrix, u_NormalMatrix, 13.2, 0.0, -10.0, 90, 0, 1, 0);
 }
 
 function drawGate(gl, u_ModelMatrix, u_NormalMatrix){
@@ -1213,7 +1221,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
   drawLampPost(gl, u_ModelMatrix, u_NormalMatrix); // draws the lamp post
-  drawFence(gl, u_ModelMatrix, u_NormalMatrix); // draws the fence
+  drawFences(gl, u_ModelMatrix, u_NormalMatrix); // draws the fence
   drawGate(gl, u_ModelMatrix, u_NormalMatrix); // draw the gate
 }
 

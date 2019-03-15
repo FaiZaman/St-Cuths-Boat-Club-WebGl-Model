@@ -58,11 +58,12 @@ let keyRight = false;
 let keyLeft = false;
 
 // keys for moving models
-let keyF = false;
-let keyG = false;
+let keyF = false; // opens/closes gate
+let keyG = false; // opens/closes main door
 
 // angles for moving models
 let gateAngle = 0;
+let mainDoorAngle = 0;
 
 // when camera pointing between axes
 let xAngle = 1;
@@ -140,6 +141,7 @@ function main(){
       keyUp(ev);
     };
     moveFence();
+    moveDoors();
     draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix);
     requestAnimationFrame(generateScene);
   };
@@ -193,6 +195,15 @@ function keyDown(ev){
       else {
           keyF = true;
       }
+      break;
+    case 'KeyG':
+      if (keyG) {
+          keyG = false;
+      }
+      else {
+          keyG = true;
+      }
+      break;
   }
 }
 
@@ -237,15 +248,30 @@ function keyUp(ev){
 
 function moveFence(){
   if (keyF){
-    gateAngle -= 0.01;
+    gateAngle -= 0.02;
     if (gateAngle < -1.5){
       gateAngle = -1.5;
     }
   }
   else{
-    gateAngle += 0.01;
+    gateAngle += 0.02;
     if (gateAngle > 0){
       gateAngle = 0;
+    }
+  }
+}
+
+function moveDoors(){
+  if (keyG){
+    mainDoorAngle -= 0.02;
+    if (mainDoorAngle < -1.5){
+      mainDoorAngle = -1.5;
+    }
+  }
+  else{
+    mainDoorAngle += 0.02;
+    if (mainDoorAngle > 0){
+      mainDoorAngle = 0;
     }
   }
 }
@@ -804,6 +830,57 @@ function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
+function drawDoors(gl, u_ModelMatrix, u_NormalMatrix, mainDoorAngle){
+
+  // model the double doors
+  color = "darkGreen";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix();
+  modelMatrix.setTranslate(13.4, -1.0, 0.0);
+  modelMatrix.translate(0.0, 0.0, Math.sin(mainDoorAngle) * 0.05);
+  let angle = mainDoorAngle*360/(2 * Math.PI);
+  modelMatrix.rotate(angle, 0, 1, 0);
+
+  pushMatrix();
+    modelMatrix.translate(0.0, 0.0, -0.76);
+    modelMatrix.scale(0.2, 3.0, 1.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  pushMatrix();
+  modelMatrix.setTranslate(13.4, -1.0, 0.0);
+
+  pushMatrix();
+    modelMatrix.translate(0.0, 0.0, 0.76);
+    modelMatrix.scale(0.2, 3.0, 1.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  pushMatrix();
+  modelMatrix.setTranslate(13.4, -1.0, 0.0);
+
+  pushMatrix();
+    modelMatrix.translate(0.0, 1.7, 0.0);
+    modelMatrix.rotate(90, 1, 0, 0);
+    modelMatrix.scale(0.2, 4.0, 0.4);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  pushMatrix();
+    modelMatrix.translate(-5.5, -0.7, -1.5);
+    modelMatrix.scale(0.2, 2.0, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
 function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, translateZ, rotateAngle, rotateX, rotateY, rotateZ){
 
   color = "lightWhite";
@@ -876,54 +953,6 @@ function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, t
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
     modelMatrix = popMatrix();
 
-  modelMatrix = popMatrix();
-}
-
-function drawDoors(gl, u_ModelMatrix, u_NormalMatrix){
-
-  // model the double doors
-  color = "darkGreen";
-  n = initCubeVertexBuffers(gl, color);
-  if (n < 0) {
-    console.log('Failed to set the vertex information');
-    return;
-  }
-
-  pushMatrix();
-  modelMatrix.setTranslate(13.4, -1.0, 0.0);
-
-  pushMatrix();
-    modelMatrix.translate(0.0, 0.0, 0.76);
-    modelMatrix.scale(0.2, 3.0, 1.5);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-    modelMatrix = popMatrix();
-  modelMatrix = popMatrix();
-
-  pushMatrix();
-  modelMatrix.setTranslate(13.4, -1.0, 0.0);
-
-  pushMatrix();
-    modelMatrix.translate(0.0, 0.0, -0.76);
-    modelMatrix.scale(0.2, 3.0, 1.5);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-    modelMatrix = popMatrix();
-  modelMatrix = popMatrix();
-
-  pushMatrix();
-  modelMatrix.setTranslate(13.4, -1.0, 0.0);
-
-  pushMatrix();
-    modelMatrix.translate(0.0, 1.7, 0.0);
-    modelMatrix.rotate(90, 1, 0, 0);
-    modelMatrix.scale(0.2, 4.0, 0.4);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-    modelMatrix = popMatrix();
-  modelMatrix = popMatrix();
-
-  pushMatrix();
-    modelMatrix.translate(-5.5, -0.7, -1.5);
-    modelMatrix.scale(0.2, 2.0, 1.0);
-    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }
 
@@ -1311,13 +1340,13 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
   drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
   drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix); // draws the roof edges
-  drawDoors(gl, u_ModelMatrix, u_NormalMatrix); // draws the main door
+  drawDoors(gl, u_ModelMatrix, u_NormalMatrix, mainDoorAngle); // draws the main door
   drawWindows(gl, u_ModelMatrix, u_NormalMatrix); // draws the windows
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
   drawLampPost(gl, u_ModelMatrix, u_NormalMatrix); // draws the lamp post
   drawFences(gl, u_ModelMatrix, u_NormalMatrix); // draws the fence
-  drawGate(gl, u_ModelMatrix, u_NormalMatrix, gateAngle); // draw the gateAngle
+  drawGate(gl, u_ModelMatrix, u_NormalMatrix, gateAngle); // draw the gate
 }
 
 function drawBox(gl, u_ModelMatrix, u_NormalMatrix, n) {

@@ -679,6 +679,14 @@ function drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix){
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
     modelMatrix = popMatrix();
 
+  // model the black entrance
+  pushMatrix(modelMatrix);
+  modelMatrix.translate(19.3, -2.5, 0.0);
+  modelMatrix.rotate(90, 0, 0, 1);
+  modelMatrix.scale(2.5, 0.01, 2.0);
+  drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
   modelMatrix = popMatrix();
 }
 
@@ -832,7 +840,7 @@ function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
 
 function drawDoors(gl, u_ModelMatrix, u_NormalMatrix, mainDoorAngle){
 
-  // model the double doors
+  // model the double sliding doors
   color = "darkGreen";
   n = initCubeVertexBuffers(gl, color);
   if (n < 0) {
@@ -842,9 +850,11 @@ function drawDoors(gl, u_ModelMatrix, u_NormalMatrix, mainDoorAngle){
 
   pushMatrix();
   modelMatrix.setTranslate(13.4, -1.0, 0.0);
+  modelMatrix.translate(0.0, 0.0, -1.0);
   modelMatrix.translate(0.0, 0.0, Math.sin(mainDoorAngle) * 0.05);
   let angle = mainDoorAngle*360/(2 * Math.PI);
   modelMatrix.rotate(angle, 0, 1, 0);
+  modelMatrix.translate(0.0, 0.0, 1.0);
 
   pushMatrix();
     modelMatrix.translate(0.0, 0.0, -0.76);
@@ -855,6 +865,11 @@ function drawDoors(gl, u_ModelMatrix, u_NormalMatrix, mainDoorAngle){
 
   pushMatrix();
   modelMatrix.setTranslate(13.4, -1.0, 0.0);
+  modelMatrix.translate(0.0, 0.0, -1.0);
+  modelMatrix.translate(0.0, 0.0, Math.sin(mainDoorAngle) * 0.05);
+  angle = mainDoorAngle*360/(2 * Math.PI);
+  modelMatrix.rotate(angle, 0, 1, 0);
+  modelMatrix.translate(0.0, 0.0, 1.0);
 
   pushMatrix();
     modelMatrix.translate(0.0, 0.0, 0.76);
@@ -1346,7 +1361,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
   drawLampPost(gl, u_ModelMatrix, u_NormalMatrix); // draws the lamp post
   drawFences(gl, u_ModelMatrix, u_NormalMatrix); // draws the fence
-  drawGate(gl, u_ModelMatrix, u_NormalMatrix, gateAngle); // draw the gate
+  drawGate(gl, u_ModelMatrix, u_NormalMatrix, gateAngle); // draws the gate
 }
 
 function drawBox(gl, u_ModelMatrix, u_NormalMatrix, n) {

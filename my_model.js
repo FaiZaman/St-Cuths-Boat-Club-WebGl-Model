@@ -69,9 +69,9 @@ let vLook = 9.75;
 
 // movement speed and camera rotation
 let lookSpeed = 0.02; // default 0.01
-let leftRightSpeed = 0.3;  // default 0.15
-let forwardBackwardSpeed = 0.3;   // default 0.15
-let upDownSpeed = 0.3; // default 0.15
+let leftRightSpeed = 0.5;  // default 0.15
+let forwardBackwardSpeed = 0.5;   // default 0.15
+let upDownSpeed = 0.5; // default 0.15
 
 // camera angle in radians for calculations
 let angle = 1.5 * Math.PI;
@@ -301,6 +301,24 @@ function initCubeVertexBuffers(gl, color) {
       210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
       210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
       210/255,105/255,30/255,    210/255,105/255,30/255,    210/255,105/255,30/255,   210/255,105/255,30/255,
+    ]);
+  }
+  else if (color == "lightWhite"){
+    colors = new Float32Array([ // colours white
+      180/255,180/255,180/255,    180/255,180/255,180/255,    180/255,180/255,180/255,   180/255,180/255,180/255,
+      180/255,180/255,180/255,    180/255,180/255,180/255,    180/255,180/255,180/255,   180/255,180/255,180/255,
+      180/255,180/255,180/255,    180/255,180/255,180/255,    180/255,180/255,180/255,   180/255,180/255,180/255,
+      180/255,180/255,180/255,    180/255,180/255,180/255,    180/255,180/255,180/255,   180/255,180/255,180/255,
+      180/255,180/255,180/255,    180/255,180/255,180/255,    180/255,180/255,180/255,   180/255,180/255,180/255,
+    ]);
+  }
+  else if (color == "white"){
+    colors = new Float32Array([ // colours white
+      240/255,240/255,240/255,    240/255,240/255,240/255,    240/255,240/255,240/255,   240/255,240/255,240/255,
+      240/255,240/255,240/255,    240/255,240/255,240/255,    240/255,240/255,240/255,   240/255,240/255,240/255,
+      240/255,240/255,240/255,    240/255,240/255,240/255,    240/255,240/255,240/255,   240/255,240/255,240/255,
+      240/255,240/255,240/255,    240/255,240/255,240/255,    240/255,240/255,240/255,   240/255,240/255,240/255,
+      240/255,240/255,240/255,    240/255,240/255,240/255,    240/255,240/255,240/255,   240/255,240/255,240/255,
     ]);
   }
 
@@ -746,6 +764,93 @@ function drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
+function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, translateZ, rotateAngle, rotateX, rotateY, rotateZ, n){
+
+  color = "lightWhite";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(translateX, translateY, translateZ);
+  modelMatrix.rotate(rotateAngle, rotateX, rotateY, rotateZ);
+
+  // model the full pane
+  pushMatrix(modelMatrix);
+    modelMatrix.scale(2.0, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  color = "white";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  // model the bars
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-1.0, 0.0, 0.05);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.35, 0.0, 0.05);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.35, 0.0, 0.05);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(1.0, 0.0, 0.05);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, 0.0, 0.05);
+    modelMatrix.rotate(90, 0, 0, 1);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, 1.0, 0.05);
+    modelMatrix.rotate(90, 0, 0, 1);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, -1.0, 0.05);
+    modelMatrix.rotate(90, 0, 0, 1);
+    modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  modelMatrix = popMatrix();
+}
+
+function drawWindows(gl, u_ModelMatrix, u_NormalMatrix){
+
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 10.0, 0.5, 2.5, 0, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 3.5, 0.5, 2.5, 0, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 0.5, 2.5, 0, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 3.5, 2.5, 0, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 10.0, 0.5, -2.5, 180, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, 3.5, 0.5, -2.5, 180, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, -0.5, -3.5, 180, 0, 1, 0, n);
+  drawWindow(gl, u_ModelMatrix, u_NormalMatrix, -2.75, 2.0, -3.5, 180, 0, 1, 0, n);
+}
+
 function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
 
   // model place for bin
@@ -960,6 +1065,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
   drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
   drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix); // draws the roof edges
+  drawWindows(gl, u_ModelMatrix, u_NormalMatrix); // draws the windows
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
 }

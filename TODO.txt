@@ -1,10 +1,4 @@
 TODO - Graphics
 
-Add more models
-	- benches
-	- bin
-	- lamppost
-	- building details
-	- tree
-	- fence
+Add movable objects
 Add textures

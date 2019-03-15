@@ -886,7 +886,12 @@ function drawMainDoor(gl, u_ModelMatrix, u_NormalMatrix){
     modelMatrix.scale(0.2, 4.0, 0.4);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
     modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
 
+  pushMatrix();
+    modelMatrix.translate(-5.5, -0.7, -1.5);
+    modelMatrix.scale(0.2, 2.0, 1.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }
 

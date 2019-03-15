@@ -1,4 +1,0 @@
-TODO - Graphics
-
-Add movable objects
-Add textures

@@ -861,8 +861,11 @@ function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
     return;
   }
 
+  pushMatrix();
+  modelMatrix.setTranslate(-3.0, -1.99, 10.5);
+
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, -1.99, 11.5);
+    modelMatrix.translate(0.0, 0.0, 0.0);
     modelMatrix.scale(3.0, 0.5, 3.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
@@ -876,10 +879,10 @@ function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
   }
 
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, -1.0, 11.5);
+    modelMatrix.translate(0.0, 1.5, 0.0);
     modelMatrix.scale(1.0, 2.0, 1.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
-  modelMatrix = popMatrix();
+    modelMatrix = popMatrix();
 
   // model bin hole
   color = "black";
@@ -890,9 +893,11 @@ function drawBin(gl, u_ModelMatrix, u_NormalMatrix){
   }
 
   pushMatrix(modelMatrix);
-    modelMatrix.translate(-3.0, -0.5, 12.01);
+    modelMatrix.translate(0.0, 2.0, 0.51);
     modelMatrix.scale(0.5, 0.5, 0.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
   modelMatrix = popMatrix();
 }
 

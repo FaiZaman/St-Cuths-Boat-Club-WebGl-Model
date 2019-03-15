@@ -986,6 +986,158 @@ function drawBenches(gl, u_ModelMatrix, u_NormalMatrix){
   modelMatrix = popMatrix();
 }
 
+function drawLampPost(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // model the post
+  color = "lightWhite";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(-1.0, 2.5, 4.0);
+
+  pushMatrix(modelMatrix);
+    modelMatrix.scale(0.2, 9.5, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  // model the lamp
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(0.0, 4.8, 0.0);
+    modelMatrix.scale(0.3, 0.2, 0.4);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+}
+
+function drawFence(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // model the beams
+  color = "brown";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(-15.0, 0.0, 2.4);
+
+  pushMatrix(modelMatrix);
+    modelMatrix.scale(15.0, 0.2, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.7, -0.75, 0.0);
+    modelMatrix.scale(13.5, 0.2, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.7, -1.5, 0.0);
+    modelMatrix.scale(13.5, 0.2, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(5.0, -0.7, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(2.5, -0.7, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-0.0, -0.7, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-2.5, -0.7, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-5.0, -0.7, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(-7.4, -0.7, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  modelMatrix = popMatrix();
+}
+
+function drawGate(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // model the gate that moves
+  color = "brown";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix(modelMatrix);
+  modelMatrix.setTranslate(-9.0, -0.7, 2.4);
+
+  pushMatrix(modelMatrix);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(3.4, 0.0, 0.0);
+    modelMatrix.scale(0.2, 2.1, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(1.7, 0.7, 0.0);
+    modelMatrix.rotate(90, 0, 0, 1);
+    modelMatrix.scale(0.2, 3.2, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(1.7, -0.7, 0.0);
+    modelMatrix.rotate(90, 0, 0, 1);
+    modelMatrix.scale(0.2, 3.2, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(1.7, 0.0, 0.0);
+    modelMatrix.rotate(90, 0, 0, 1);
+    modelMatrix.rotate(20, 0, 0, 1);
+    modelMatrix.scale(0.2, 3.5, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(1.7, 0.0, 0.0);
+    modelMatrix.rotate(-90, 0, 0, 1);
+    modelMatrix.rotate(-20, 0, 0, 1);
+    modelMatrix.scale(0.2, 3.5, 0.2);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  modelMatrix = popMatrix();
+}
+
 let g_matrixStack = []; // array for storing a matrix
 function pushMatrix(m) { // Store the specified matrix to the array
   let m2 = new Matrix4(m);
@@ -1050,16 +1202,8 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
 
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // draw x and y axes; set and pass model matrix to uniform variable
-  let n = initAxesVertexBuffers(gl);
-  if (n < 0) {
-    console.log('Failed to set the vertex information');
-    return;
-  }
-
   modelMatrix.setTranslate(0, 0, 0);
   gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
-  gl.drawArrays(gl.LINES, 0, n);
 
   drawGround(gl, u_ModelMatrix, u_NormalMatrix);  // draws grass and roads
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
@@ -1068,8 +1212,10 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawWindows(gl, u_ModelMatrix, u_NormalMatrix); // draws the windows
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches
+  drawLampPost(gl, u_ModelMatrix, u_NormalMatrix); // draws the lamp post
+  drawFence(gl, u_ModelMatrix, u_NormalMatrix); // draws the fence
+  drawGate(gl, u_ModelMatrix, u_NormalMatrix); // draw the gate
 }
-
 
 function drawBox(gl, u_ModelMatrix, u_NormalMatrix, n) {
   pushMatrix(modelMatrix);

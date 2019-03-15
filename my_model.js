@@ -532,10 +532,18 @@ function drawGround(gl, u_ModelMatrix, u_NormalMatrix){
     console.log('Failed to set the vertex information');
     return;
   }
-  // model the road
+
+  // model the  main road
   pushMatrix(modelMatrix);
     modelMatrix.translate(2.5, -2.0, 15.0);
     modelMatrix.scale(50.0, 0.5, 6.0);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+  modelMatrix = popMatrix();
+
+  // model the side road
+  pushMatrix(modelMatrix);
+    modelMatrix.translate(20.4, -1.75, 0.0);
+    modelMatrix.scale(14.2, 0.01, 5.0);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
   modelMatrix = popMatrix();
 }
@@ -833,6 +841,49 @@ function drawWindow(gl, u_ModelMatrix, u_NormalMatrix, translateX, translateY, t
     modelMatrix.translate(0.0, -1.0, 0.05);
     modelMatrix.rotate(90, 0, 0, 1);
     modelMatrix.scale(0.1, 2.0, 0.1);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+
+  modelMatrix = popMatrix();
+}
+
+function drawMainDoor(gl, u_ModelMatrix, u_NormalMatrix){
+
+  // model the double doors
+  color = "darkGreen";
+  n = initCubeVertexBuffers(gl, color);
+  if (n < 0) {
+    console.log('Failed to set the vertex information');
+    return;
+  }
+
+  pushMatrix();
+  modelMatrix.setTranslate(13.4, -1.0, 0.0);
+
+  pushMatrix();
+    modelMatrix.translate(0.0, 0.0, 0.76);
+    modelMatrix.scale(0.2, 3.0, 1.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  pushMatrix();
+  modelMatrix.setTranslate(13.4, -1.0, 0.0);
+
+  pushMatrix();
+    modelMatrix.translate(0.0, 0.0, -0.76);
+    modelMatrix.scale(0.2, 3.0, 1.5);
+    drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
+    modelMatrix = popMatrix();
+  modelMatrix = popMatrix();
+
+  pushMatrix();
+  modelMatrix.setTranslate(13.4, -1.0, 0.0);
+
+  pushMatrix();
+    modelMatrix.translate(0.0, 1.7, 0.0);
+    modelMatrix.rotate(90, 1, 0, 0);
+    modelMatrix.scale(0.2, 4.0, 0.4);
     drawBox(gl, u_ModelMatrix, u_NormalMatrix, n);
     modelMatrix = popMatrix();
 
@@ -1222,6 +1273,7 @@ function draw(gl, u_ModelMatrix, u_NormalMatrix, u_ViewMatrix) {
   drawMainBuilding(gl, u_ModelMatrix, u_NormalMatrix);  // draws the main building
   drawRoofs(gl, u_ModelMatrix, u_NormalMatrix); // draws the roofs of the building
   drawRoofEdges(gl, u_ModelMatrix, u_NormalMatrix); // draws the roof edges
+  drawMainDoor(gl, u_ModelMatrix, u_NormalMatrix); // draws the main door
   drawWindows(gl, u_ModelMatrix, u_NormalMatrix); // draws the windows
   drawBin(gl, u_ModelMatrix, u_NormalMatrix); // draws the bin
   drawBenches(gl, u_ModelMatrix, u_NormalMatrix); // draws the benches

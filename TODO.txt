@@ -1,9 +1,4 @@
 TODO - Graphics
 
-Add more models
-	- benches!! - make off of chair js
-	- lamppost
-	- building details
-	- tree
-	- fence
+Add movable objects
 Add textures
